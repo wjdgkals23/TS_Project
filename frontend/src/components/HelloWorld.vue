@@ -79,6 +79,9 @@
           awesome-vue
         </a>
       </li>
+      <li>
+        <p v-on:click="test">click</p>
+      </li>
     </ul>
   </div>
 </template>
@@ -86,9 +89,21 @@
 <script>
 export default {
   name: 'HelloWorld',
+  created () {
+    this.$io.on("test", function(data){
+      console.log(data);
+    })
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    test: function() {
+      this.$io.emit("test", {
+        name: "hamin"
+      })
     }
   }
 }
