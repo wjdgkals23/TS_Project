@@ -15,10 +15,5 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>',
-  sockets : {
-    connect: function() {
-
-    }
-  }
+  template: '<App/>'
 })
