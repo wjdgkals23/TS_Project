@@ -8,17 +8,26 @@
 
 <script>
   import * as jspdf from 'jspdf'
+  import html2canvas from 'html2canvas'
 export default {
   name: 'App',
-  data: {
+  created() {
+    this.$http({
+      method: 'get',
+      url: '/user'
+    }).then(function(response){
+        console.log(response);
+    })
   },
   methods: {
     savepdf: function(){
       const doc = new jspdf();
-      doc.fromHTML(document.getElementById('app'), 15, 15, {
-        'width': 170
-      });
-      doc.save('sample-file.pdf');
+      var element = document.getElementById("#app");
+      html2canvas(document.querySelector("#app")).then(canvas =>{
+        var image = canvas.toDataURL("image/png");
+        doc.addImage(image, 'JPEG', 15,40, 100, 100)
+        doc.save("simple_test.pdf")
+        });
     }
   }
 }
