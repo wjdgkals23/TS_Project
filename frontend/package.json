@@ -10,13 +10,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@mdi/font": "^2.5.94",
     "axios": "^0.18.0",
     "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.4.1",
+    "material-design-icons-iconfont": "^3.0.3",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^2.1.1-b"
+    "vue-socket.io": "^2.1.1-b",
+    "vuetify": "^1.1.7"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

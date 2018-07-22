@@ -1,22 +1,37 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <toolbar v-on:logincheck="loginclick"></toolbar>
+    <login v-bind:check="check" v-on:cancel="cancel" v-on:login="login"></login>
     <button id="cmd" v-on:click="savepdf">Generate PDF</button>
-    <router-view/>
+    <component v-bind:is="user"></component>
   </div>
 </template>
 
 <script>
   import * as jspdf from 'jspdf'
   import html2canvas from 'html2canvas'
+  import Toolbar from './components/Toolbar'
+  import Login from './components/Login'
+  import User from './components/User'
+  import SuperUser from './components/SuperUser'
+
 export default {
   name: 'App',
+  components: { Toolbar, Login, User, SuperUser },
+  data () {
+    return {
+      user_data: [],
+      check: false,
+      user: ""
+    }
+  },
   created() {
     this.$http({
       method: 'get',
       url: '/user'
-    }).then(function(response){
-        console.log(response);
+    }).then((response) =>{
+        console.log(response.data);
+        this.user_data.push(response.data);
     })
   },
   methods: {
@@ -28,6 +43,25 @@ export default {
         doc.addImage(image, 'JPEG', 15,40, 100, 100)
         doc.save("simple_test.pdf")
         });
+    },
+    login: function(val) {
+      console.log(val.id);
+      this.$http.post('/users', val).then((response) => {
+        this.check = false;
+        if(response.data.superuser == 1){
+          this.user = "super-user"
+        }
+        else{
+          this.user = "user"
+        }
+      })
+    },
+    loginclick: function() {
+      console.log("on");
+      this.check = true;
+    },
+    cancel: function() {
+      this.check = false;
     }
   }
 }
@@ -35,11 +69,6 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
