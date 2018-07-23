@@ -3,7 +3,11 @@
     <toolbar v-on:logincheck="loginclick"></toolbar>
     <login v-bind:check="check" v-on:cancel="cancel" v-on:login="login"></login>
     <!--<button id="cmd" v-on:click="savepdf">Generate PDF</button>-->
-    <component v-bind:is="user" v-bind:doc="doc_list" style="padding-top: 20px;"></component>
+    <component v-bind:is="mode"
+               v-bind:doc="doc_list"
+               v-on:modifydoc="change_mode"
+               style="padding-top: 20px;">
+    </component>
   </div>
 </template>
 
@@ -14,16 +18,17 @@
   import Login from './components/Login'
   import User from './components/User'
   import SuperUser from './components/SuperUser'
+  import DocModify from './components/DocModify'
 
 export default {
   name: 'App',
-  components: { Toolbar, Login, User, SuperUser },
+  components: { Toolbar, Login, User, SuperUser, DocModify },
   data () {
     return {
       user_data: [],
       check: false,
-      user: "",
-      doc_list: ""
+      mode: "",
+      doc_list: "",
     }
   },
   created() {
@@ -56,15 +61,14 @@ export default {
         this.check = false;
         if(response.data.superuser == 1){
           this.$io.emit("login", response.data);
-          this.user = "super-user";
+          this.mode = "super-user";
         }
         else{
           console.log(response.data.num_id);
           this.$io.emit("login", response.data);
-          this.user = "user"
+          this.mode = "user"
         }
       })
-
     },
     loginclick: function() {
       console.log("on");
@@ -72,6 +76,13 @@ export default {
     },
     cancel: function() {
       this.check = false;
+    },
+    change_mode: function(item) {
+      console.log(item);
+      if(item.mode == "modify"){
+        this.mode = "doc-modify";
+        this.doc_list = item;
+      }
     }
   }
 }
