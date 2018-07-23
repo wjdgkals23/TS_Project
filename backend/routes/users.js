@@ -22,12 +22,13 @@ router.post('/', function(req, res, next) {
       console.log(err);
     }
     else{
-      console.log(results[0]);
+      req.session.num_id = results[0].id;
       req.session.userid = results[0].userid;
       req.session.username = results[0].name;
       req.session.superuser = results[0].superuser;
       var sesuser = {
-          id: req.session.userid,
+          id: req.session.num_id,
+          userid: req.session.userid,
           name: req.session.username,
           superuser: req.session.superuser
       }

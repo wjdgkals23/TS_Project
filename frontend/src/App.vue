@@ -2,8 +2,8 @@
   <div id="app">
     <toolbar v-on:logincheck="loginclick"></toolbar>
     <login v-bind:check="check" v-on:cancel="cancel" v-on:login="login"></login>
-    <button id="cmd" v-on:click="savepdf">Generate PDF</button>
-    <component v-bind:is="user"></component>
+    <!--<button id="cmd" v-on:click="savepdf">Generate PDF</button>-->
+    <component v-bind:is="user" v-bind:doc="doc_list" style="padding-top: 20px;"></component>
   </div>
 </template>
 
@@ -22,16 +22,22 @@ export default {
     return {
       user_data: [],
       check: false,
-      user: ""
+      user: "",
+      doc_list: ""
     }
   },
   created() {
     this.$http({
       method: 'get',
       url: '/user'
+    //  세션 데이터도 넘겨줘서 새로고침 했을 때도 로그아웃 안되게....
     }).then((response) =>{
         console.log(response.data);
-        this.user_data.push(response.data);
+        this.user_data = response.data;
+    })
+    this.$io.on("login", (data)=>{
+      console.log(data);
+      this.doc_list = data;
     })
   },
   methods: {
@@ -49,12 +55,16 @@ export default {
       this.$http.post('/users', val).then((response) => {
         this.check = false;
         if(response.data.superuser == 1){
-          this.user = "super-user"
+          this.$io.emit("login", response.data);
+          this.user = "super-user";
         }
         else{
+          console.log(response.data.num_id);
+          this.$io.emit("login", response.data);
           this.user = "user"
         }
       })
+
     },
     loginclick: function() {
       console.log("on");
@@ -70,5 +80,7 @@ export default {
 <style>
 #app {
   text-align: center;
+  width: 1000px;
+  margin: 10px auto;
 }
 </style>

@@ -5,6 +5,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat v-on:click="loginclick">Login</v-btn>
+      <v-btn flat v-on:click="loginclick">Logout</v-btn>
     </v-toolbar-items>
   </v-toolbar>
 </template>

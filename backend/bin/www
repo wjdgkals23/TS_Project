@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
+var conn = require('../config/db')();
 
 /**
  * Get port from environment and store in Express.
@@ -35,9 +36,36 @@ server.on('listening', onListening);
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection',(socket)=>{
-    socket.on("test", (data)=>{
+    socket.on("login", (data)=>{
         console.log(socket.id, data);
-        socket.emit("test", "complete");
+        if(data.superuser == 0){
+            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+                +"WHERE A.user_id = " + data.id + ";"
+            conn.query(sql, function(err, results){
+              if(err){
+                console.log("login_error");
+                console.log(err);
+              }
+              else{
+                console.log(results);
+                socket.emit("login", results);
+              }
+            });
+        }
+        else {
+            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id);"
+            conn.query(sql, function(err, results){
+                if(err){
+                    console.log("login_error");
+                    console.log(err);
+                }
+                else{
+                    console.log(results);
+                    socket.emit("login", results);
+                }
+            });
+            socket.emit("login", "complete");
+        }
     })
 })
 
