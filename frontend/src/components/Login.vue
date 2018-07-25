@@ -1,11 +1,10 @@
 <template>
-  <v-layout row justify-center>
+  <v-layout>
     <v-dialog
       v-model="check"
       max-width="350">
       <v-card color="white">
         <v-card-title class="headline">Login View</v-card-title>
-
         <v-flex justify-center style="padding: 20px;">
           <v-text-field
             label="ID"
@@ -16,10 +15,8 @@
             v-model="pw"
           ></v-text-field>
         </v-flex>
-
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn
             color="green darken-1"
             flat="flat"
@@ -27,7 +24,6 @@
           >
             Login
           </v-btn>
-
           <v-btn
             color="green darken-1"
             flat="flat"

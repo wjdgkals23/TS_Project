@@ -47,8 +47,11 @@ io.sockets.on('connection',(socket)=>{
                 console.log(err);
               }
               else{
-                console.log(results);
-                socket.emit("login", results);
+                var result = {
+                    name: "User",
+                    doc: results
+                }
+                socket.emit("login", result);
               }
             });
         }
@@ -60,8 +63,11 @@ io.sockets.on('connection',(socket)=>{
                     console.log(err);
                 }
                 else{
-                    console.log(results);
-                    socket.emit("login", results);
+                    var result = {
+                        name: "SuperUser",
+                        doc: results
+                    }
+                    socket.emit("login", result);
                 }
             });
             socket.emit("login", "complete");

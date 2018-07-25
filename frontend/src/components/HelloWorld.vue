@@ -87,6 +87,8 @@
 </template>
 
 <script>
+  import * as jspdf from 'jspdf'
+  import html2canvas from 'html2canvas'
 export default {
   name: 'HelloWorld',
   created () {
@@ -104,6 +106,15 @@ export default {
       this.$io.emit("test", {
         name: "hamin"
       })
+    },
+    savepdf: function(){
+      const doc = new jspdf();
+      var element = document.getElementById("#app");
+      html2canvas(document.querySelector("#app")).then(canvas =>{
+        var image = canvas.toDataURL("image/png");
+        doc.addImage(image, 'JPEG', 15,40, 100, 100)
+        doc.save("simple_test.pdf")
+      });
     }
   }
 }

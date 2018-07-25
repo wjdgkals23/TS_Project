@@ -1,9 +1,9 @@
 <template>
-  <v-layout row wrap align-center>
+  <v-layout row wrap align-center style="padding: 20px;">
     <v-flex v-for="item, index in doc">
-      <v-card width="900px" height="40px" style="line-height: 10px; margin-left: 50px;">
+      <v-card width="900px" style="line-height: 10px; margin-left: 30px;">
         <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
-        <v-btn>수정</v-btn>
+        <v-btn v-on:click="Modifydoc(item)">수정</v-btn>
         <v-btn>보기</v-btn>
         <v-btn>저장</v-btn>
       </v-card>
@@ -14,7 +14,16 @@
 <script>
     export default {
         name: "User",
-      props: [ "doc" ],
+      data() {
+        return {
+          null_ch: true,
+          doc: ""
+        }
+      },
+      created() {
+        console.log(this.$route);
+        this.doc = this.$route.params.doc_list;
+      }
     }
 </script>
 

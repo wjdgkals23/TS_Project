@@ -1,88 +1,87 @@
 <template>
-  <div id="app">
-    <toolbar v-on:logincheck="loginclick"></toolbar>
-    <login v-bind:check="check" v-on:cancel="cancel" v-on:login="login"></login>
-    <!--<button id="cmd" v-on:click="savepdf">Generate PDF</button>-->
-    <component v-bind:is="mode"
-               v-bind:doc="doc_list"
-               v-on:modifydoc="change_mode"
-               style="padding-top: 20px;">
-    </component>
-  </div>
+  <v-container grid-list-md id="app">
+    <toolbar v-on:logincheck="loginclick" v-bind:check="login_check"></toolbar>
+    <v-dialog
+      v-model="check"
+      max-width="350">
+      <v-card color="white">
+        <v-card-title class="headline">Login View</v-card-title>
+        <v-flex justify-center style="padding: 20px;">
+          <v-text-field label="ID" v-model="id"></v-text-field>
+          <v-text-field label="PW" v-model="pw"></v-text-field>
+        </v-flex>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat="flat" @click="login">Login</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="cancel">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-spacer></v-spacer>
+    <v-btn v-if="!login_check" color="green darken-1" v-bind:to="mode" style="position: absolute; top: 90px; right: 20px; margin:5px;">조회</v-btn>
+    <!--<router-link >변경</router-link>-->
+    <router-view style="margin-top: 10px;"></router-view>
+  </v-container>
 </template>
 
 <script>
-  import * as jspdf from 'jspdf'
-  import html2canvas from 'html2canvas'
   import Toolbar from './components/Toolbar'
   import Login from './components/Login'
-  import User from './components/User'
-  import SuperUser from './components/SuperUser'
-  import DocModify from './components/DocModify'
+  import router from './router/index'
 
 export default {
   name: 'App',
-  components: { Toolbar, Login, User, SuperUser, DocModify },
+  router,
+  components: { Toolbar, Login },
   data () {
     return {
       user_data: [],
       check: false,
       mode: "",
       doc_list: "",
+      login_check: true,
+      id: "",
+      pw: ""
     }
   },
   created() {
-    this.$http({
-      method: 'get',
-      url: '/user'
-    //  세션 데이터도 넘겨줘서 새로고침 했을 때도 로그아웃 안되게....
-    }).then((response) =>{
-        console.log(response.data);
-        this.user_data = response.data;
-    })
     this.$io.on("login", (data)=>{
       console.log(data);
-      this.doc_list = data;
+      this.doc_list = data.doc;
+      this.mode = {
+        name: data.name,
+        params: {
+          doc_list: data.doc
+        }
+      }
     })
   },
   methods: {
-    savepdf: function(){
-      const doc = new jspdf();
-      var element = document.getElementById("#app");
-      html2canvas(document.querySelector("#app")).then(canvas =>{
-        var image = canvas.toDataURL("image/png");
-        doc.addImage(image, 'JPEG', 15,40, 100, 100)
-        doc.save("simple_test.pdf")
-        });
-    },
-    login: function(val) {
-      console.log(val.id);
+    login: function() {
+      var val = {
+        id: this.id,
+        pw: this.pw
+      }
       this.$http.post('/users', val).then((response) => {
         this.check = false;
         if(response.data.superuser == 1){
           this.$io.emit("login", response.data);
-          this.mode = "super-user";
+          this.login_check = !this.login_check;
         }
         else{
-          console.log(response.data.num_id);
+          // console.log(response.data.num_id);
+          console.log("user here");
           this.$io.emit("login", response.data);
-          this.mode = "user"
+          this.login_check = !this.login_check;
         }
       })
     },
     loginclick: function() {
-      console.log("on");
+      // console.log("on");
       this.check = true;
     },
     cancel: function() {
       this.check = false;
-    },
-    change_mode: function(item) {
-      console.log(item);
-      if(item.mode == "modify"){
-        this.mode = "doc-modify";
-        this.doc_list = item;
-      }
     }
   }
 }
@@ -90,8 +89,10 @@ export default {
 
 <style>
 #app {
-  text-align: center;
+  /*text-align: center;*/
   width: 1000px;
-  margin: 10px auto;
+  /*margin: 10px auto;*/
+  box-shadow: 1px 1px 1px 1px #888888;
+  position: relative;
 }
 </style>

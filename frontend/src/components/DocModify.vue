@@ -1,11 +1,18 @@
 <template>
-  <div id="doc">
-    <img :src="imgsrc" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 400px;">
-    <div class="topcentered"><h1>{{ doc.title }}</h1></div>
-    <div class="top-left">Top Left</div>
-    <div class="top-right">Top Right</div>
-    <div class="bottom-right">Bottom Right</div>
-    <div class="centered">Centered</div>
+  <div>
+    <div id="doc">
+      <img :src="imgsrc" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 400px;">
+      <div class="top-centered">
+        <v-text-field label="상장명" v-model="doc.title"></v-text-field>
+      </div>
+      <div class="top-left">제 {{ doc.id }} 호</div>
+      <div class="centered">
+        <v-textarea id="content" v-model="doc.content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
+      </div>
+      <div class="bottom-centered-up">{{ doc.company }}</div>
+      <div class="bottom-centered">{{ datestring }}</div>
+    </div>
+    <v-btn color="green darken-1">저장</v-btn>
   </div>
 </template>
 
@@ -13,10 +20,23 @@
     export default {
         name: "DocModify",
       props: [ "doc" ],
+      data() {
+          return {
+            title: "",
+            content: "",
+            date: "",
+            type: "",
+            watermark: ""
+          }
+      },
       computed: {
           imgsrc: function() {
-            console.log("../assets/" + this.doc.watermark);
             return "./images/"+ this.doc.watermark
+          },
+          datestring: function() {
+            var str = this.doc.date.slice(0,10);
+            var temp = str.split("-");
+            return temp[0] + "년 " + temp[1] + "월 " + temp[2] + "일"
           }
       }
     }
@@ -24,6 +44,7 @@
 
 <style scoped>
   #doc{
+    box-shadow: 10px 10px 8px 10px #888888;
     margin: 10px auto;
     width: 793px;
     height: 1122px;
@@ -40,8 +61,8 @@
   /* Top left text */
   .top-left {
     position: absolute;
-    top: 8px;
-    left: 16px;
+    top: 18px;
+    left: 26px;
   }
 
   /* Top right text */
@@ -60,16 +81,35 @@
 
   /* Centered text */
   .centered {
+    width: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 
-  .topcentered {
+  .top-centered {
     position: absolute;
-    top: 50px;
+    top: 150px;
     left: 50%;
+    transform: translate(-50%, 0%);
+  }
+
+  .bottom-centered {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 15px;
+    transform: translate(-50%, 0%);
+  }
+
+  .bottom-centered-up {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 15px;
     transform: translate(-50%, 0%);
   }
 </style>
