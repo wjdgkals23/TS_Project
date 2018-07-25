@@ -17,8 +17,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-spacer></v-spacer>
-    <v-btn v-if="!login_check" color="green darken-1" v-bind:to="mode" style="position: absolute; top: 90px; right: 20px; margin:5px;">조회</v-btn>
+    <div id="greeting" v-if="greet_check">CRAPE MANAGEMENT</div>
+    <v-btn v-if="!login_check" color="green darken-1" v-bind:to="mode" v-on:click="greet_check=false" style="position: absolute; top: 90px; right: 20px; margin:5px;">조회</v-btn>
     <!--<router-link >변경</router-link>-->
     <router-view style="margin-top: 10px;"></router-view>
   </v-container>
@@ -41,7 +41,8 @@ export default {
       doc_list: "",
       login_check: true,
       id: "",
-      pw: ""
+      pw: "",
+      greet_check: true
     }
   },
   created() {
@@ -95,4 +96,12 @@ export default {
   box-shadow: 1px 1px 1px 1px #888888;
   position: relative;
 }
+  #greeting {
+    margin: 10px auto;
+    width: 500px;
+    height: 500px;
+    text-align: center;
+    line-height: 500px;
+    font-size: 30px;
+  }
 </style>

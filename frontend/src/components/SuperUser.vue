@@ -1,16 +1,19 @@
 <template>
-  <v-container grid-list-md text-xs-center>
-    <v-layout column wrap style="padding: 20px; margin-left: 0;">
-      <v-flex v-for="item, index in doc" style="">
+  <div class="supermain">
+    <div class="doc_list">
+      <v-flex v-for="item, index in doc" style="" width="250px">
         <v-card style="line-height: 10px;">
           <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
-          <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}">수정</v-btn>
+          <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">수정</v-btn>
           <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
         </v-card>
       </v-flex>
-    </v-layout>
-    <router-view></router-view>
-  </v-container>
+    </div>
+    <div class="doc_view">
+      <div id="doc" v-if="doc_check"> VIEW </div>
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -21,7 +24,8 @@
       data() {
           return {
             null_ch: true,
-            doc: ""
+            doc: "",
+            doc_check: true
           }
       },
       created() {
@@ -38,11 +42,29 @@
 </script>
 
 <style scoped>
-  .btn {
-    border: 1px solid black;
-    padding: 3px;
-    text-decoration: none;
-    font-weight: bold;
-    color: black;
+  .supermain {
+    padding-top: 20px;
+  }
+  .doc_list {
+    width: 400px;
+    margin-top: 40px;
+    margin-left: 10px;
+    position: absolute;
+    top: 100px;
+  }
+  .doc_view {
+    width: 400px;
+    margin: 20px;
+    position: relative;
+    left: 50%;
+  }
+  #doc{
+    box-shadow: 10px 10px 8px 10px #888888;
+    margin: 10px auto;
+    width: 398px;
+    height: 561px;
+    line-height: 561px;
+    text-align: center;
+    position: relative;
   }
 </style>

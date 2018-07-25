@@ -1,6 +1,5 @@
 <template>
   <v-toolbar color="orange darken-3">
-    <v-toolbar-side-icon></v-toolbar-side-icon>
     <v-toolbar-title>Crape Management</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
