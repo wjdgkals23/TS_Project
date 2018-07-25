@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
+import App2 from './App2'
 import router from './router'
+import store from './store'
 import axios from 'axios'
 import io from 'socket.io-client'
 import '../node_modules/vuetify/dist/vuetify.min.css'
@@ -19,6 +21,7 @@ Vue.use(Vuetify);
 new Vue({
   el: '#app',
   router,
-  components: { App },
-  template: '<App/>'
+  store,
+  components: { App2 },
+  template: '<App2/>'
 })
