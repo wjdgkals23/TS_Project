@@ -5,19 +5,19 @@
       <v-toolbar-title>Crape Management</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-on:click="loginclick" v-if="check">Login</v-btn>
-        <v-btn flat v-on:click="loginclick" v-if="!check">Logout</v-btn>
+        <v-btn flat v-on:click="loginclick" v-if="!login_maintain">Login</v-btn>
+        <v-btn flat v-on:click="loginclick" v-if="login_maintain">Logout</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
     <v-dialog
-      v-model="check"
+      v-model="login_box"
       max-width="350">
       <v-card color="white">
         <v-card-title class="headline">Login View</v-card-title>
         <v-flex justify-center style="padding: 20px;">
-          <v-text-field label="ID" v-model="id"></v-text-field>
-          <v-text-field label="PW" v-model="pw"></v-text-field>
+          <v-text-field label="ID" v-model="userid"></v-text-field>
+          <v-text-field label="PW" v-model="userpw"></v-text-field>
         </v-flex>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -27,10 +27,10 @@
       </v-card>
     </v-dialog>
 
-    <div id="greeting" v-if="greet_check">CRAPE MANAGEMENT</div>
-    <!--<v-btn v-if="!login_check" color="green darken-1" v-bind:to="mode" v-on:click="greet_check=false" style="position: absolute; top: 90px; right: 20px; margin:5px;">조회</v-btn>-->
+    <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="mode" style="margin-left:850px;">조회</v-btn>
+    <div id="greeting" v-if="!login_maintain">CRAPE MANAGEMENT</div>
     <!--<router-link >변경</router-link>-->
-    <!--<router-view style="margin-top: 10px;"></router-view>-->
+    <router-view style="margin-top: 10px;"></router-view>
   </v-container>
 </template>
 
@@ -45,48 +45,70 @@
     router,
     data() {
       return {
-        id: "",
-        pw: ""
+        userid: "",
+        userpw: "",
+        login_box: false
       }
     },
-    computed : mapState([ 'doc_list', 'user_data', 'check', 'mode', 'doc', 'login_check', 'greet_check' ]),
+    computed : _.extend({
+      login_maintain: function() {
+        if(this.mode == ""){
+          return false
+        }
+        else{
+          return true
+        }
+      },
+      router_mode : function() {
+        if(this.mode == "User"){
+          return { name: "User" }
+        }
+        else{
+          return { name: "SuperUser" }
+        }
+      }
+    },mapState([ 'doc_list', 'user_data', 'check', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw' ])) ,
     created() {
       this.$io.on("login", (data)=>{
         console.log(data);
         var temp = {
           name: data.name,
           doc_list: data.doc,
-          id: this.id,
-          pw: this.pw
+          id: data.userid,
+          userdata: data.userdata
         }
         this.$store.dispatch(Constant.LOGIN, temp);
-        this.id = "";
-        this.pw = "";
+        this.userid = "";
+        this.userpw = "";
       })
     },
     methods: _.extend({
         login : function () {
           var val = {
-            id: this.id,
-            pw: this.pw
+            id: this.userid,
+            pw: this.userpw
           }
           this.$http.post('/users', val).then((response) => {
-            // this.check = false;
+            console.log(response.data.superuser);
             if(response.data.superuser == 1){
+              this.login_box = false;
               this.$io.emit("login", response.data);
             }
             else{
               // console.log(response.data.num_id);
+              this.login_box = false;
               console.log("user here");
               this.$io.emit("login", response.data);
             }
           })
+        },
+        loginclick : function() {
+            this.login_box = true;
+        },
+        cancel : function() {
+            this.login_box = false;
         }
-      },
-      mapMutations({
-        loginclick : Constant.LOOGIN_CLICK,
-        cancel : Constant.CANCEL
-      })
+      }
     )
   }
 </script>

@@ -1,17 +1,31 @@
 <template>
-  <div id="doc">
-    <img :src="imgsrc" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 400px;">
-    <div class="top-centered"><h1>{{ doc.title }}</h1></div>
-    <div class="top-left">제 {{ doc.id }} 호</div>
-    <div class="bottom-centered">{{ datestring }}</div>
-    <div class="centered">{{ doc.content }}</div>
+  <div>
+    <div id="doc">
+      <img :src="imgsrc" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 50%;">
+      <div class="top-centered">{{ doc.title }}</div>
+      <div class="top-left">제 {{ doc.id }} 호</div>
+      <div class="centered">{{ doc.content }}</div>
+      <div class="bottom-centered-up">{{ doc.company }}</div>
+      <div class="bottom-centered">{{ datestring }}</div>
+    </div>
+    <v-btn color="green darken-1">저장</v-btn>
   </div>
 </template>
 
 <script>
+  import _ from 'lodash'
   export default {
     name: "DocModify",
     props: [ "doc" ],
+    data() {
+      return {
+        title: "",
+        content: "",
+        date: "",
+        type: "",
+        watermark: ""
+      }
+    },
     computed: {
       imgsrc: function() {
         return "./images/"+ this.doc.watermark
@@ -27,10 +41,10 @@
 
 <style scoped>
   #doc{
-    box-shadow: 10px 10px 8px 10px #888888;
+    box-shadow: 2px 2px 2px 2px #888888;
     margin: 10px auto;
-    width: 793px;
-    height: 1122px;
+    width: 398px;
+    height: 561px;
     position: relative;
   }
 
@@ -64,6 +78,7 @@
 
   /* Centered text */
   .centered {
+    width: 300px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -72,7 +87,7 @@
 
   .top-centered {
     position: absolute;
-    top: 150px;
+    top: 100px;
     left: 50%;
     transform: translate(-50%, 0%);
   }
@@ -80,6 +95,15 @@
   .bottom-centered {
     position: absolute;
     bottom: 100px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 15px;
+    transform: translate(-50%, 0%);
+  }
+
+  .bottom-centered-up {
+    position: absolute;
+    bottom: 150px;
     left: 50%;
     font-weight: bold;
     font-size: 15px;

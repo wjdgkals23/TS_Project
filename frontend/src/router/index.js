@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import User from '../components/User'
 import SuperUser from '../components/SuperUser'
 import DocModify from '../components/DocModify'
+import DocView from '../components/DocView'
+import Super from '../components/Super'
 Vue.use(Router)
 
 export default new Router({
@@ -10,30 +12,26 @@ export default new Router({
     {
       path: '/SuperUser',
       name: 'SuperUser',
-      component: SuperUser,
+      component: Super,
       props: true,
-      children: [
-        {
-          path: '/SuperUser/DocModify/:no',
-          name: 'DocModify',
-          component: DocModify,
-          props: true
-        }
-      ]
+      children: [{
+        path: '/DocView/:no',
+        name: 'DocView',
+        component: DocView,
+        props: true
+      }]
     },
     {
       path: '/User',
       name: 'User',
       component: User,
-      props: true,
-      children: [
-        {
-          path: ':DocModify/',
-          name: 'DocModify',
-          component: DocModify,
-          props: true
-        }
-      ]
+      props: true
+    },
+    {
+      path: 'DocModify/:no',
+      name: 'DocModify',
+      component: DocModify,
+      props: true
     }
   ]
 })

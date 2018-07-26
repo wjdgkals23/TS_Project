@@ -49,14 +49,16 @@ io.sockets.on('connection',(socket)=>{
               else{
                 var result = {
                     name: "User",
-                    doc: results
+                    doc: results,
+                    userid: data.userid
                 }
                 socket.emit("login", result);
               }
             });
         }
         else {
-            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id);"
+            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id);" +
+                "SELECT * FROM ts.user WHERE superuser = 0"
             conn.query(sql, function(err, results){
                 if(err){
                     console.log("login_error");
@@ -65,7 +67,9 @@ io.sockets.on('connection',(socket)=>{
                 else{
                     var result = {
                         name: "SuperUser",
-                        doc: results
+                        doc: results[0],
+                        userid: data.userid,
+                        userdata: results[1]
                     }
                     socket.emit("login", result);
                 }
