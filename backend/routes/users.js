@@ -30,7 +30,8 @@ router.post('/', function(req, res, next) {
           id: req.session.num_id,
           userid: req.session.userid,
           name: req.session.username,
-          superuser: req.session.superuser
+          superuser: req.session.superuser,
+          belong: results[0].belong
       }
       req.session.save(function(){
           res.send(JSON.stringify(sesuser));

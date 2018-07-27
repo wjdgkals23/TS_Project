@@ -1,19 +1,17 @@
 <template>
-  <div class="supermain">
-    <div class="doc_list">
-      <v-flex v-for="item, index in doc" style="" width="250px">
-        <v-card style="line-height: 10px;">
-          <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
-          <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">수정</v-btn>
-          <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
-        </v-card>
-      </v-flex>
-    </div>
-    <div class="doc_view">
+  <v-layout row wrap>
+    <v-flex xs12>
+      <v-card style="line-height: 10px;">
+        <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
+        <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">수정</v-btn>
+        <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
+      </v-card>
+    </v-flex>
+    <v-flex xs6>
       <div id="doc" v-if="doc_check"> VIEW </div>
       <router-view></router-view>
-    </div>
-  </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

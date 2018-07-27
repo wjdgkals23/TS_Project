@@ -1,37 +1,45 @@
 <template>
-  <v-container grid-list-md id="app">
-
-    <v-toolbar color="orange darken-3">
-      <v-toolbar-title>Crape Management</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-on:click="loginclick" v-if="!login_maintain">Login</v-btn>
-        <v-btn flat v-on:click="loginclick" v-if="login_maintain">Logout</v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-
-    <v-dialog
-      v-model="login_box"
-      max-width="350">
-      <v-card color="white">
-        <v-card-title class="headline">Login View</v-card-title>
-        <v-flex justify-center style="padding: 20px;">
-          <v-text-field label="ID" v-model="userid"></v-text-field>
-          <v-text-field label="PW" v-model="userpw"></v-text-field>
+  <v-app>
+    <v-container grid-list-md>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <v-toolbar color="orange darken-3">
+            <v-toolbar-title>Crape Management</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items class="hidden-sm-and-down">
+              <v-btn flat v-on:click="loginclick" v-if="!login_maintain">Login</v-btn>
+              <v-btn flat v-on:click="loginclick" v-if="login_maintain">Logout</v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
         </v-flex>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="login">Login</v-btn>
-          <v-btn color="green darken-1" flat="flat" @click="cancel">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="mode" style="margin-left:850px;">조회</v-btn>
-    <div id="greeting" v-if="!login_maintain">CRAPE MANAGEMENT</div>
-    <!--<router-link >변경</router-link>-->
-    <router-view style="margin-top: 10px;"></router-view>
-  </v-container>
+        <v-flex xs12>
+          <div class="text-xs-right">
+            <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="mode">조회</v-btn>
+            <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="{ name:'DocAdd' }">추가</v-btn>
+          </div>
+        </v-flex>
+      </v-layout>
+      <v-dialog
+        v-model="login_box"
+        max-width="350">
+        <v-card color="white">
+          <v-card-title class="headline">Login View</v-card-title>
+          <v-flex justify-center style="padding: 20px;">
+            <v-text-field label="ID" v-model="userid"></v-text-field>
+            <v-text-field label="PW" v-model="userpw"></v-text-field>
+          </v-flex>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat="flat" @click="login">Login</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="cancel">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <div id="greeting" v-if="!login_maintain">CRAPE MANAGEMENT</div>
+      <!--<router-link >변경</router-link>-->
+      <router-view style="margin-top: 10px;"></router-view>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -67,7 +75,7 @@
           return { name: "SuperUser" }
         }
       }
-    },mapState([ 'doc_list', 'user_data', 'check', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw' ])) ,
+    },mapState([ 'doc_list', 'user_data', 'check', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw', 'belong' ])) ,
     created() {
       this.$io.on("login", (data)=>{
         console.log(data);
@@ -75,7 +83,8 @@
           name: data.name,
           doc_list: data.doc,
           id: data.userid,
-          userdata: data.userdata
+          userdata: data.userdata,
+          belong: data.belong
         }
         this.$store.dispatch(Constant.LOGIN, temp);
         this.userid = "";
@@ -116,15 +125,15 @@
 <style>
   #app {
     /*text-align: center;*/
-    width: 1000px;
     /*margin: 10px auto;*/
     box-shadow: 1px 1px 1px 1px #888888;
     position: relative;
   }
   #greeting {
     margin: 10px auto;
-    width: 500px;
+    width: 100%;
     height: 500px;
+    box-shadow: 1px 1px 1px 1px #888888;
     text-align: center;
     line-height: 500px;
     font-size: 30px;

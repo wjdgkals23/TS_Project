@@ -5,6 +5,7 @@ import SuperUser from '../components/SuperUser'
 import DocModify from '../components/DocModify'
 import DocView from '../components/DocView'
 import Super from '../components/Super'
+import DocAdd from '../components/DocAdd'
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +32,12 @@ export default new Router({
       path: 'DocModify/:no',
       name: 'DocModify',
       component: DocModify,
+      props: true
+    },
+    {
+      path: 'DocAdd',
+      name: 'DocAdd',
+      component: DocAdd,
       props: true
     }
   ]

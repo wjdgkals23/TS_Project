@@ -4,13 +4,13 @@
       <div id="doc">
         <img src="../assets/sejongmark.png" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 50%;">
         <div class="top-centered">
-          <v-text-field label="상장명" v-model="doc.title"></v-text-field>
+          <v-text-field label="상장명"></v-text-field>
         </div>
-        <div class="top-left">제 {{ doc.id }} 호</div>
+        <div class="top-left">제 {{ doc_list.length + 1 }} 호</div>
         <div class="centered">
-          <v-textarea id="content" v-model="doc.content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
+          <v-textarea id="content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
         </div>
-        <div class="bottom-centered-up">{{ doc.company }}</div>
+        <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
         <div class="bottom-centered">{{ datestring }}</div>
       </div>
       <!--컴포넌트화 시키자-->
@@ -54,43 +54,41 @@
 <script>
   import _ from 'lodash'
   import { mapState } from 'vuex'
-    export default {
-        name: "DocModify",
-      props: [ "doc" ],
-      data() {
-          return {
-            title: "",
-            content: "",
-            date: "",
-            type: "",
-            watermark: "",
-            user: [],
-            grade: [ "대상", "금상", "은상", "동상", "장려상" ],
-            choose_grade: [],
-            wm_list: [ 'SejongMark1', 'SejongMark2' ]
-          }
+  export default {
+    name: "DocAdd",
+    data() {
+      return {
+        title: "",
+        content: "",
+        date: "",
+        type: "",
+        watermark: "",
+        user: [],
+        grade: [ "대상", "금상", "은상", "동상", "장려상" ],
+        choose_grade: [],
+        wm_list: [ 'SejongMark1', 'SejongMark2' ]
+      }
+    },
+    computed: _.extend({
+      imgsrc: function() {
+        return "../assets/"+ this.doc.watermark
       },
-      computed: _.extend({
-        imgsrc: function() {
-          return "../assets/"+ this.doc.watermark
-        },
-        datestring: function() {
-          var str = this.doc.date.slice(0,10);
-          var temp = str.split("-");
-          return temp[0] + "년 " + temp[1] + "월 " + temp[2] + "일"
-        },
-        user_data_computed: function() {
-          let temp = [];
-          for(var item in this.user_data){
-            let info = this.user_data[item]
-            console.log(info.id + " " + info.name);
-            temp.push(info.id + " " + info.name);
-          }
-          console.log(temp);
-          return temp;
+      datestring: function() {
+        var date = new Date();
+        return date.getFullYear()+ "년 " + date.getMonth()+ "월 " + date.getDate()+ "일"
+      },
+      user_data_computed: function() {
+        let temp = [];
+        for(var item in this.user_data){
+          let info = this.user_data[item]
+          console.log(info.id + " " + info.name);
+          temp.push(info.id + " " + info.name);
         }
-        }, mapState([ 'mode', 'user_data' ]))
-    }
+        console.log(temp);
+        return temp;
+      }
+    }, mapState([ 'mode', 'user_data', 'doc_list', 'belong' ]))
+  }
 </script>
 
 <style scoped>

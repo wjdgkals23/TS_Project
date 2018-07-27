@@ -8,6 +8,7 @@ export default {
       state.id = payload.id;
       state.mode = payload.name;
       state.user_data = payload.userdata;
+      state.belong = payload.belong;
     }
     else {
       console.log("empty");

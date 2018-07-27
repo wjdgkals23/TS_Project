@@ -7,5 +7,6 @@ export default {
   login_check: true,
   greet_check: true,
   id: "",
-  pw: ""
+  pw: "",
+  belong: ""
 }
