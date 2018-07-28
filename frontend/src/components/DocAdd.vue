@@ -4,11 +4,11 @@
       <div id="doc">
         <img src="../assets/sejongmark.png" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 50%;">
         <div class="top-centered">
-          <v-text-field label="상장명"></v-text-field>
+          <v-text-field label="상장명" v-model="title"></v-text-field>
         </div>
         <div class="top-left">제 {{ doc_list.length + 1 }} 호</div>
         <div class="centered">
-          <v-textarea id="content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
+          <v-textarea v-model="content" id="content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
         </div>
         <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
         <div class="bottom-centered">{{ datestring }}</div>
@@ -18,18 +18,10 @@
     <v-flex xs6 class="text-xs-right">
       <v-layout row wrap align-center>
         <v-flex xs12 sm6>
-          <v-subheader v-text="'Choose Multiple Student'"></v-subheader>
-        </v-flex>
-        <v-flex xs12 sm6>
-          <v-select :items="user_data_computed" v-model="user" label="Select" multiple max-height="400" hint="Pick Student" persistent-hint></v-select>
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap align-center>
-        <v-flex xs12 sm6>
           <v-subheader v-text="'Choose Crape Grade'"></v-subheader>
         </v-flex>
         <v-flex xs12 sm6>
-          <v-select :items="grade" v-model="user" label="Select" multiple max-height="400" hint="Pick Grade" persistent-hint></v-select>
+          <v-select :items="grade" v-model="selected_grade" label="Select" multiple max-height="400" hint="Pick Grade" persistent-hint></v-select>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-center>
@@ -37,13 +29,18 @@
           <v-subheader v-text="'Choose Watermark'"></v-subheader>
         </v-flex>
         <v-flex xs12 sm6>
-          <v-select :items="wm_list" v-model="user" label="Select" multiple max-height="400" hint="WaterMark" persistent-hint></v-select>
+          <v-select :items="wm_list" v-model="watermark" label="Select" max-height="400" hint="WaterMark" persistent-hint></v-select>
         </v-flex>
       </v-layout>
     </v-flex>
     <v-flex xs12 class="text-xs-center" style="margin-top: 20px">
       <div>
-        <v-btn color="green darken-1">저장</v-btn>
+        {{ make_sql }}
+      </div>
+    </v-flex>
+    <v-flex xs12 class="text-xs-center" style="margin-top: 20px">
+      <div>
+        <v-btn color="green darken-1" v-on:click="adddoc" v-bind:to="{ name: mode }">저장</v-btn>
         <v-btn color="green darken-1" v-bind:to="{ name: mode }">취소</v-btn>
       </div>
     </v-flex>
@@ -54,6 +51,7 @@
 <script>
   import _ from 'lodash'
   import { mapState } from 'vuex'
+  import Constant from '../constant'
   export default {
     name: "DocAdd",
     data() {
@@ -63,11 +61,18 @@
         date: "",
         type: "",
         watermark: "",
-        user: [],
+        selected_grade: [],
         grade: [ "대상", "금상", "은상", "동상", "장려상" ],
         choose_grade: [],
-        wm_list: [ 'SejongMark1', 'SejongMark2' ]
+        wm_list: [ 'sejongmark.png', 'sejongmakr1.png' ],
+        sql: ""
       }
+    },
+    created() {
+      this.$io.on("adddoc", (data)=> {
+        console.log(data);
+        this.$store.dispatch(Constant.ADD_DOC, data);
+      })
     },
     computed: _.extend({
       imgsrc: function() {
@@ -75,7 +80,11 @@
       },
       datestring: function() {
         var date = new Date();
-        return date.getFullYear()+ "년 " + date.getMonth()+ "월 " + date.getDate()+ "일"
+        return date.getFullYear()+ "년 " + (date.getMonth()+1)+ "월 " + date.getDate()+ "일"
+      },
+      datestring2: function() {
+        var date = new Date();
+        return date.getFullYear()+ "/" + (date.getMonth()+1)+ "/" + date.getDate()
       },
       user_data_computed: function() {
         let temp = [];
@@ -86,8 +95,23 @@
         }
         console.log(temp);
         return temp;
+      },
+      make_sql: function() {
+        let sql = 'INSERT INTO ts.doctype(typename, content, date, company, title, watermark) values ("Crape",'
+          + '"' + this.content + '",' + '"' + this.datestring2 + '",' + this.belong[0].id
+          + ',"' + this.title + '",' + '"' + this.watermark + '");'
+        this.sql = sql;
       }
-    }, mapState([ 'mode', 'user_data', 'doc_list', 'belong' ]))
+    }, mapState([ 'mode', 'user_data', 'doc_list', 'belong' ])),
+    methods: {
+      adddoc: function() {
+        let temp = {
+          sql: this.sql,
+          belong: this.belong[0].id
+        }
+        this.$io.emit("adddoc", temp);
+      }
+    }
   }
 </script>
 

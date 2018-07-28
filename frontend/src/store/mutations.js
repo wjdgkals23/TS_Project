@@ -13,5 +13,13 @@ export default {
     else {
       console.log("empty");
     }
+  },
+  [Constant.ADD_DOC] : (state, payload) => {
+    if(payload){
+      state.doc_list = payload;
+    }
+    else {
+      console.log("empty");
+    }
   }
 }

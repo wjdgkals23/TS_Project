@@ -10,7 +10,7 @@
         <div class="centered">
           <v-textarea id="content" v-model="doc.content" label="Content" counter maxlength="120" full-width single-line style="box-shadow: 1px 1px 1px 1px #888888; font-family: 궁서체;"></v-textarea>
         </div>
-        <div class="bottom-centered-up">{{ doc.company }}</div>
+        <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
         <div class="bottom-centered">{{ datestring }}</div>
       </div>
       <!--컴포넌트화 시키자-->
@@ -89,7 +89,7 @@
           console.log(temp);
           return temp;
         }
-        }, mapState([ 'mode', 'user_data' ]))
+        }, mapState([ 'mode', 'user_data', 'belong' ]))
     }
 </script>
 

@@ -1,5 +1,6 @@
 export default {
   LOGIN : "login",
   LOOGIN_CLICK : "loginClick",
-  CANCEL : "cancel"
+  CANCEL : "cancel",
+  ADD_DOC: "adddoc"
 }

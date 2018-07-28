@@ -57,7 +57,7 @@ io.sockets.on('connection',(socket)=>{
             });
         }
         else {
-            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id);" +
+            var sql = "SELECT * FROM ts.doctype WHERE company = " + data.belong + ";" +
                 "SELECT * FROM ts.user WHERE superuser = 0 and belong = " + data.belong + "; SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
             conn.query(sql, function(err, results){
                 if(err){
@@ -78,6 +78,28 @@ io.sockets.on('connection',(socket)=>{
             socket.emit("login", "complete");
         }
     })
+    socket.on("adddoc", (data)=>{
+        conn.query(data.sql, function(err, results1){
+            if(err){
+                console.log("add_error");
+                console.log(err);
+            }
+            else{
+                console.log(results1);
+                let sql = "SELECT * FROM ts.doctype WHERE company = " + data.belong + ";";
+                conn.query(sql, function(err, results2){
+                    if(err){
+                        console.log("add_error");
+                        console.log(err);
+                    }
+                    else{
+                        console.log(results2);
+                        socket.emit("adddoc", results2);
+                    }
+                })
+            }
+        })
+    });
 })
 
 /**

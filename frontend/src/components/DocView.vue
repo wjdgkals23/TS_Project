@@ -5,7 +5,7 @@
       <div class="top-centered">{{ doc.title }}</div>
       <div class="top-left">제 {{ doc.id }} 호</div>
       <div class="centered">{{ doc.content }}</div>
-      <div class="bottom-centered-up">{{ doc.company }}</div>
+      <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
       <div class="bottom-centered">{{ datestring }}</div>
     </div>
     <v-btn color="green darken-1">저장</v-btn>
@@ -14,6 +14,7 @@
 
 <script>
   import _ from 'lodash'
+  import { mapState } from 'vuex'
   export default {
     name: "DocModify",
     props: [ "doc" ],
@@ -26,16 +27,26 @@
         watermark: ""
       }
     },
-    computed: {
+    computed: _.extend({
       imgsrc: function() {
-        return "./images/"+ this.doc.watermark
+        return "../assets/"+ this.doc.watermark
       },
       datestring: function() {
         var str = this.doc.date.slice(0,10);
         var temp = str.split("-");
         return temp[0] + "년 " + temp[1] + "월 " + temp[2] + "일"
+      },
+      user_data_computed: function() {
+        let temp = [];
+        for(var item in this.user_data){
+          let info = this.user_data[item]
+          console.log(info.id + " " + info.name);
+          temp.push(info.id + " " + info.name);
+        }
+        console.log(temp);
+        return temp;
       }
-    }
+    }, mapState([ 'mode', 'user_data', 'belong' ]))
   }
 </script>
 
