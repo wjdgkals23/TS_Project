@@ -21,5 +21,17 @@ export default {
     else {
       console.log("empty");
     }
+  },
+  [Constant.LOGOUT] : (state, payload) => {
+    if(payload == "Complete") {
+      state.doc_list = [];
+      state.id = "";
+      state.mode = "";
+      state.user_data = "";
+      state.belong = "";
+    }
+    else {
+      console.log("empty");
+    }
   }
 }

@@ -39,4 +39,18 @@ router.post('/', function(req, res, next) {
     }
   });
 });
+
+router.post('/logout', function(req, res, next) {
+    console.log(req.session.userid);
+    req.session.destroy((err)=>{
+        if(err){
+            console.log("error");
+            res.send("Error");
+        }else{
+            res.send("Complete")
+        }
+    })
+
+});
+
 module.exports = router;

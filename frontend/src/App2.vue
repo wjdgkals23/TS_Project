@@ -8,7 +8,7 @@
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
               <v-btn flat v-on:click="loginclick" v-if="!login_maintain">Login</v-btn>
-              <v-btn flat v-on:click="loginclick" v-if="login_maintain">Logout</v-btn>
+              <v-btn flat v-on:click="logout" v-if="login_maintain" v-bind:to="{ name:'Empty' }">Logout</v-btn>
             </v-toolbar-items>
           </v-toolbar>
         </v-flex>
@@ -116,6 +116,16 @@
         },
         cancel : function() {
             this.login_box = false;
+        },
+        logout : function() {
+          this.$http.post('/users/logout').then((response)=>{
+            if(response=="Error"){
+              console.log("Fail Logout");
+            }else{
+              console.log("Complete Logout");
+              this.$store.commit(Constant.LOGOUT, "Complete");
+            }
+          })
         }
       }
     )

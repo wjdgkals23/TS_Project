@@ -1,15 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import User from '../components/User'
-import SuperUser from '../components/SuperUser'
+import SuperUser from '../components/Empty'
 import DocModify from '../components/DocModify'
 import DocView from '../components/DocView'
 import Super from '../components/Super'
+import Empty from '../components/Empty'
 import DocAdd from '../components/DocAdd'
+import App from '../App2'
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      path: '/',
+      name: 'Empty',
+      component: Empty,
+      props: true
+    },
     {
       path: '/SuperUser',
       name: 'SuperUser',
