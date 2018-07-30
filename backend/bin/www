@@ -77,7 +77,7 @@ io.sockets.on('connection',(socket)=>{
             });
             socket.emit("login", "complete");
         }
-    })
+    });
     socket.on("adddoc", (data)=>{
         conn.query(data.sql, function(err, results1){
             if(err){
@@ -97,6 +97,18 @@ io.sockets.on('connection',(socket)=>{
                         socket.emit("adddoc", results2);
                     }
                 })
+            }
+        })
+    });
+    socket.on("distributedoc", (data)=>{
+        conn.query(data, function(err, results){
+            if(err){
+                console.log("distribute_error");
+                console.log(err);
+            }
+            else{
+                console.log(results);
+                socket.emit("distributedoc", "complete distribute");
             }
         })
     });

@@ -7,6 +7,8 @@ import DocView from '../components/DocView'
 import Super from '../components/Super'
 import Empty from '../components/Empty'
 import DocAdd from '../components/DocAdd'
+import DocDistribute from '../components/DocDistribute'
+
 import App from '../App2'
 
 Vue.use(Router)
@@ -47,6 +49,12 @@ export default new Router({
       path: 'DocAdd',
       name: 'DocAdd',
       component: DocAdd,
+      props: true
+    },
+    {
+      path: 'DocDistribute/:no',
+      name: 'DocDistribute',
+      component: DocDistribute,
       props: true
     }
   ]

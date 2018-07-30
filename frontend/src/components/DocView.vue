@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="doc">
-      <img :src="imgsrc" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 50%;">
+      <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
       <div class="top-centered">{{ doc.title }}</div>
       <div class="top-left">제 {{ doc.id }} 호</div>
       <div class="centered">{{ doc.content }}</div>
@@ -29,7 +29,7 @@
     },
     computed: _.extend({
       imgsrc: function() {
-        return "../assets/"+ this.doc.watermark
+        return "images/"+ this.doc.watermark
       },
       datestring: function() {
         var str = this.doc.date.slice(0,10);

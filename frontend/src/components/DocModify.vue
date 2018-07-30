@@ -2,7 +2,7 @@
   <v-layout row wrap>
     <v-flex xs6 class="text-xs-center">
       <div id="doc">
-        <img src="../assets/sejongmark.png" alt="" class="centered" style="z-index: -1; opacity: 0.4; width: 50%;">
+        <img src="../assets/sejongmark.png" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
         <div class="top-centered">
           <v-text-field label="상장명" v-model="doc.title"></v-text-field>
         </div>
@@ -72,7 +72,7 @@
       },
       computed: _.extend({
         imgsrc: function() {
-          return "../assets/"+ this.doc.watermark
+          return "images/"+ this.doc.watermark
         },
         datestring: function() {
           var str = this.doc.date.slice(0,10);
