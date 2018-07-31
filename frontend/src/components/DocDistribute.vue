@@ -51,10 +51,18 @@
     props: [ "doc" ],
     created() {
       this.$io.on("distributedoc", (res)=>{
-        if(res=="complete distribute"){
+        console.log("hi");
+        if(res=="complete_distribute"){
           alert("complete distribute");
-        }else{
+        }
+        else if(res=="distribute_error"){
           alert("fail distribute");
+        }
+        else if(res=="duplicate"){
+          alert("어떤 학생에게 중복배포하였습니다.");
+        }
+        else {
+          alert("중복체크에 실패하였습니다.");
         }
       })
     },
@@ -69,17 +77,21 @@
         grade: [ "대상", "금상", "은상", "동상", "장려상" ],
         choose_grade: "",
         wm_list: [ 'SejongMark1', 'SejongMark2' ],
-        sql: ""
+        insert_sql: "",
+        select_sql: ""
       }
     },
     methods: {
       distribute: function() {
         for(var i in this.user){
-          let sql = 'INSERT INTO ts.doc(doctype, grade, user_id) values ('
+          let select_sql = 'SELECT * FROM ts.doc WHERE doctype = ' + this.doc.id + ' AND user_id = ' + this.user[i].split(" ")[0] + ';'
+          let insert_sql = 'INSERT INTO ts.doc(doctype, grade, user_id) values ('
             + '' + this.doc.id + ', "'  + this.choose_grade + '",' + this.user[i].split(" ")[0] + ');'
-          this.sql += sql;
+          this.insert_sql += insert_sql;
+          this.select_sql += select_sql;
         }
-        this.$io.emit("distributedoc", this.sql);
+        console.log(this.select_sql);
+        this.$io.emit("distributedoc", {select: this.select_sql, insert: this.insert_sql});
       }
     },
     computed: _.extend({
@@ -94,11 +106,9 @@
       user_data_computed: function() {
         let temp = [];
         for(var item in this.user_data){
-          let info = this.user_data[item]
-          console.log(info.id + " " + info.name);
+          let info = this.user_data[item];
           temp.push(info.id + " " + info.name);
         }
-        console.log(temp);
         return temp;
       }
     }, mapState([ 'mode', 'user_data', 'belong' ]))

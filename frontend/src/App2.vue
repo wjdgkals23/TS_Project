@@ -66,25 +66,23 @@
         else{
           return true
         }
-      },
-      router_mode : function() {
-        if(this.mode == "User"){
-          return { name: "User" }
-        }
-        else{
-          return { name: "SuperUser" }
-        }
       }
     },mapState([ 'doc_list', 'user_data', 'check', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw', 'belong' ])) ,
     created() {
       this.$io.on("login", (data)=>{
-        console.log(data);
-        var temp = {
-          name: data.name,
-          doc_list: data.doc,
-          id: data.userid,
-          userdata: data.userdata,
-          belong: data.belong
+        let temp = {};
+        if(data.name == "User"){
+          temp.name = data.name;
+          temp.doc_list = data.doc;
+          temp.id = data.userid;
+          temp.belong = data.belong;
+        }
+        else{
+            temp.name = data.name;
+            temp.doc_list = data.doc;
+            temp.id = data.userid;
+            temp.userdata = data.userdata;
+            temp.belong = data.belong;
         }
         this.$store.dispatch(Constant.LOGIN, temp);
         this.userid = "";

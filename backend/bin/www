@@ -40,7 +40,7 @@ io.sockets.on('connection',(socket)=>{
         console.log(socket.id, data);
         if(data.superuser == 0){
             var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-                +"WHERE A.user_id = " + data.id + ";"
+                +"WHERE A.user_id = " + data.id + ";" + "SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
             conn.query(sql, function(err, results){
               if(err){
                 console.log("login_error");
@@ -49,8 +49,9 @@ io.sockets.on('connection',(socket)=>{
               else{
                 var result = {
                     name: "User",
-                    doc: results,
-                    userid: data.userid
+                    doc: results[0],
+                    userid: data.userid,
+                    belong: results[1]
                 }
                 socket.emit("login", result);
               }
@@ -101,14 +102,28 @@ io.sockets.on('connection',(socket)=>{
         })
     });
     socket.on("distributedoc", (data)=>{
-        conn.query(data, function(err, results){
+        conn.query(data.select, function(err, results){
             if(err){
-                console.log("distribute_error");
+                console.log("check_duplicate_error");
                 console.log(err);
+                socket.emit("distributedoc", "check_duplicate_error");
             }
             else{
-                console.log(results);
-                socket.emit("distributedoc", "complete distribute");
+                if(results.length > 0){
+                    socket.emit("distributedoc", "duplicate");
+                }
+                else{
+                    conn.query(data.insert, function(err, results1) {
+                       if(err){
+                           console.log(err);
+                           socket.emit("distributedoc", "distribute_error");
+                       }
+                       else {
+                           console.log(results1);
+                           socket.emit("distributedoc", "complete_distribute");
+                       }
+                    });
+                }
             }
         })
     });

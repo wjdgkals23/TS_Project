@@ -3,12 +3,19 @@ import Constant from '../constant'
 export default {
   [Constant.LOGIN] : (state, payload) => {
     if(payload) {
-      console.log(payload.id);
-      state.doc_list = payload.doc_list;
-      state.id = payload.id;
-      state.mode = payload.name;
-      state.user_data = payload.userdata;
-      state.belong = payload.belong;
+      if(payload.name == "SuperUser"){
+        state.doc_list = payload.doc_list;
+        state.id = payload.id;
+        state.mode = payload.name;
+        state.user_data = payload.userdata;
+        state.belong = payload.belong;
+      }
+      else{
+        state.doc_list = payload.doc_list;
+        state.id = payload.id;
+        state.mode = payload.name;
+        state.belong = payload.belong;
+      }
     }
     else {
       console.log("empty");
