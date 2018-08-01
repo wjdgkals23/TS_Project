@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="doc">
+    <div id="doc" v-if="mode=='SuperUser'">
       <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
       <div class="top-centered">{{ doc.title }}</div>
       <div class="top-left">제 {{ doc.id }} 호</div>
@@ -8,13 +8,23 @@
       <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
       <div class="bottom-centered">{{ datestring }}</div>
     </div>
-    <v-btn color="green darken-1">저장</v-btn>
+    <div id="doc2" v-if="mode=='User'">
+      <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
+      <div class="top-centered">{{ doc.title }}</div>
+      <div class="top-left">제 {{ doc.id }} 호</div>
+      <div class="centered">{{ doc.content }}</div>
+      <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
+      <div class="bottom-centered">{{ datestring }}</div>
+    </div>
+    <v-btn color="green darken-1" v-on:click="save_pdf()" class="">저장</v-btn>
   </div>
 </template>
 
 <script>
   import _ from 'lodash'
   import { mapState } from 'vuex'
+  import jspdf from 'jspdf'
+  import html2canvas from 'html2canvas'
   export default {
     name: "DocModify",
     props: [ "doc" ],
@@ -46,7 +56,26 @@
         console.log(temp);
         return temp;
       }
-    }, mapState([ 'mode', 'user_data', 'belong' ]))
+    }, mapState([ 'mode', 'user_data', 'belong', 'mode' ])),
+    methods: {
+      save_pdf: function() {
+        const doc = new jspdf();
+        if(this.mode == "SuperUser"){
+          html2canvas(document.querySelector("#doc")).then(canvas =>{
+            var image = canvas.toDataURL("image/png");
+            doc.addImage(image, 'JPEG', 0,0, 210, 297)
+            doc.save("simple_test.pdf")
+          });
+        }
+        else{
+          html2canvas(document.querySelector("#doc2")).then(canvas =>{
+            var image = canvas.toDataURL("image/png");
+            doc.addImage(image, 'JPEG', 0,0, 210, 297)
+            doc.save("simple_test.pdf")
+          });
+        }
+      }
+    }
   }
 </script>
 
@@ -54,11 +83,22 @@
   #doc{
     box-shadow: 2px 2px 2px 2px #888888;
     margin: 10px auto;
-    width: 398px;
-    height: 561px;
+    margin-top: 0px;
+    width: 595px;
+    height: 842px;
     position: relative;
+    font-size: 20px;
   }
 
+  #doc2{
+    box-shadow: 2px 2px 2px 2px #888888;
+    margin: 10px auto;
+    margin-top: 0px;
+    width: 595px;
+    height: 842px;
+    position: relative;
+    font-size: 20px;
+  }
   /* Bottom left text */
   .bottom-left {
     position: absolute;
@@ -94,6 +134,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 2;
   }
 
   .top-centered {
@@ -101,6 +142,8 @@
     top: 100px;
     left: 50%;
     transform: translate(-50%, 0%);
+    font-weight: bold;
+    font-size: 30px;
   }
 
   .bottom-centered {
@@ -117,7 +160,7 @@
     bottom: 150px;
     left: 50%;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 25px;
     transform: translate(-50%, 0%);
   }
 </style>

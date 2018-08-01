@@ -1,22 +1,26 @@
 <template>
-  <v-container text-xs-center xs12>
-    <v-text center>상장 관리</v-text>
-    <v-layout column wrap>
-      <v-flex v-for="item, index in doc_list" xs6>
-        <v-card>
+  <v-layout row wrap class="text-xs-center">
+    <v-flex xs12>
+      <v-text center>상장 관리</v-text>
+    </v-flex>
+    <!-- v-flex는 사이즈 요소 지정 -->
+    <v-flex xs6>
+      <!-- v-layout 은 라인 형태 잡기 row column 요소로 -->
+      <v-layout column wrap v-for="item, index in doc_list">
+        <v-card style="padding: 5px;">
           <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
           <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">수정</v-btn>
           <v-btn v-bind:to="{ name:'DocView' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">보기</v-btn>
           <v-btn v-bind:to="{ name:'DocDistribute' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">배포</v-btn>
           <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
         </v-card>
-      </v-flex>
-      <v-flex xs6>
-        <div id="doc" v-if="doc_check"> VIEW </div>
-        <router-view v-if="!doc_check"></router-view>
-      </v-flex>
-    </v-layout>
-  </v-container>
+      </v-layout>
+    </v-flex>
+    <v-flex xs6>
+      <div id="doc" v-if="doc_check"> VIEW </div>
+      <router-view v-if="!doc_check"></router-view>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
