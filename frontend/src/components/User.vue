@@ -7,7 +7,7 @@
       <v-layout column wrap v-for="item, index in doc_list">
         <v-card>
           <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
-          <v-btn v-bind:to="{ name:'DocView' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">보기</v-btn>
+          <v-btn v-bind:to="{ name:'UserDocView' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">보기</v-btn>
           <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
         </v-card>
       </v-layout>

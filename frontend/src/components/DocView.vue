@@ -12,6 +12,7 @@
       <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
       <div class="top-centered">{{ doc.title }}</div>
       <div class="top-left">제 {{ doc.id }} 호</div>
+      <div class="name">성  명 : {{ doc.name }}</div>
       <div class="centered">{{ doc.content }}</div>
       <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
       <div class="bottom-centered">{{ datestring }}</div>
@@ -111,6 +112,13 @@
     position: absolute;
     top: 18px;
     left: 26px;
+  }
+
+  .name {
+    position: absolute;
+    top: 208px;
+    right: 36px;
+    font-weight: bold;
   }
 
   /* Top right text */

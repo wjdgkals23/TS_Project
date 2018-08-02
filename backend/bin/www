@@ -39,8 +39,8 @@ io.sockets.on('connection',(socket)=>{
     socket.on("login", (data)=>{
         console.log(socket.id, data);
         if(data.superuser == 0){
-            var sql = "SELECT A.*, B.* FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-                +"WHERE A.user_id = " + data.id + ";" + "SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
+            var sql = "SELECT C.*, D.* FROM (SELECT A.*, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+                +"WHERE A.user_id = " + data.id + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);" + "SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
             conn.query(sql, function(err, results){
               if(err){
                 console.log("login_error");

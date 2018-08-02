@@ -14,8 +14,8 @@
         </v-flex>
         <v-flex xs12>
           <div class="text-xs-right">
-            <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="mode">조회</v-btn>
-            <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="{ name:'DocAdd' }">추가</v-btn>
+            <v-btn v-if="login_maintain" color="green darken-1" v-bind:to="{ name: mode }">조회</v-btn>
+            <v-btn v-if="login_maintain && mode=='SuperUser'" color="green darken-1" v-bind:to="{ name:'DocAdd' }">추가</v-btn>
           </div>
         </v-flex>
       </v-layout>
