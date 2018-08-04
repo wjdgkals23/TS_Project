@@ -11,7 +11,8 @@
     <div id="doc2" v-if="mode=='User'">
       <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
       <div class="top-centered">{{ doc.title }}</div>
-      <div class="top-left">제 {{ doc.id }} 호</div>
+      <div class="top-left">제 {{ doc.doc_num }} 호</div>
+      <div class="grade">{{ doc.grade }}</div>
       <div class="name">성  명 : {{ doc.name }}</div>
       <div class="centered">{{ doc.content }}</div>
       <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
@@ -29,6 +30,27 @@
   export default {
     name: "DocModify",
     props: [ "doc" ],
+    created() {
+      // console.log(this.doc);
+      this.$io.on("check_doc", (data)=>{
+        console.log(data == "gogo");
+        const doc = new jspdf();
+        if(data == "gogo"){
+          html2canvas(document.querySelector("#doc")).then(canvas =>{
+            var image = canvas.toDataURL("image/png");
+            doc.addImage(image, 'JPEG', 0,0, 210, 297)
+            doc.save("simple_test.pdf")
+          });
+        }
+        else{
+          html2canvas(document.querySelector("#doc2")).then(canvas =>{
+            var image = canvas.toDataURL("image/png");
+            doc.addImage(image, 'JPEG', 0,0, 210, 297)
+            doc.save(this.doc.title + " " + this.doc.name);
+          });
+        }
+      })
+    },
     data() {
       return {
         title: "",
@@ -49,7 +71,7 @@
       },
       user_data_computed: function() {
         let temp = [];
-        for(var item in this.user_data){
+        for (var item in this.user_data) {
           let info = this.user_data[item]
           console.log(info.id + " " + info.name);
           temp.push(info.id + " " + info.name);
@@ -60,21 +82,7 @@
     }, mapState([ 'mode', 'user_data', 'belong', 'mode' ])),
     methods: {
       save_pdf: function() {
-        const doc = new jspdf();
-        if(this.mode == "SuperUser"){
-          html2canvas(document.querySelector("#doc")).then(canvas =>{
-            var image = canvas.toDataURL("image/png");
-            doc.addImage(image, 'JPEG', 0,0, 210, 297)
-            doc.save("simple_test.pdf")
-          });
-        }
-        else{
-          html2canvas(document.querySelector("#doc2")).then(canvas =>{
-            var image = canvas.toDataURL("image/png");
-            doc.addImage(image, 'JPEG', 0,0, 210, 297)
-            doc.save("simple_test.pdf")
-          });
-        }
+        this.$io.emit("check_doc", this.doc);
       }
     }
   }
@@ -114,9 +122,16 @@
     left: 26px;
   }
 
+  .grade {
+    position: absolute;
+    top: 188px;
+    right: 50px;
+    font-weight: bold;
+  }
+
   .name {
     position: absolute;
-    top: 208px;
+    top: 228px;
     right: 36px;
     font-weight: bold;
   }

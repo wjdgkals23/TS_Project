@@ -39,7 +39,7 @@ io.sockets.on('connection',(socket)=>{
     socket.on("login", (data)=>{
         console.log(socket.id, data);
         if(data.superuser == 0){
-            var sql = "SELECT C.*, D.* FROM (SELECT A.*, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+            var sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
                 +"WHERE A.user_id = " + data.id + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);" + "SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
             conn.query(sql, function(err, results){
               if(err){
@@ -127,6 +127,36 @@ io.sockets.on('connection',(socket)=>{
             }
         })
     });
+    socket.on("check_doc", (data)=>{
+        console.log(data);
+        let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+            +"WHERE A.user_id = " + data.id + " AND B.content" + data.content + " AND B.watermark" + data.watermark+ ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.dsid);"
+        conn.query(sql, function(err,results) {
+            if(err){
+                socket.emit("check_doc", "error_check_doc")
+            }
+            else{
+                if(results.length <= 0) {
+                    socket.emit("check_doc", "change_content")
+                }
+                else {
+                    socket.emit("check_doc", "gogo")
+                }
+            }
+        })
+    });
+    // socket.on("change_doc", (data)=>{
+    //     let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+    //         +"WHERE A.user_id = " + data.id + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
+    //     conn.query(sql, function(err, results){
+    //         if(err){
+    //
+    //         }
+    //         else{
+    //             console.log
+    //         }
+    //     })
+    // });
 })
 
 /**

@@ -43,7 +43,7 @@
     </v-flex>
     <v-flex xs12 class="text-xs-center" style="margin-top: 20px">
       <div>
-        <v-btn color="green darken-1">저장</v-btn>
+        <v-btn color="green darken-1" v-on:click="change_doc">저장</v-btn>
         <v-btn color="green darken-1" v-bind:to="{ name: mode }">취소</v-btn>
       </div>
     </v-flex>
@@ -86,11 +86,25 @@
             console.log(info.id + " " + info.name);
             temp.push(info.id + " " + info.name);
           }
-          console.log(temp);
           return temp;
         }
-        }, mapState([ 'mode', 'user_data', 'belong' ]))
-    }
+        }, mapState([ 'mode', 'user_data', 'belong' ])),
+      methods: {
+          change_doc: function() {
+            this.$io.emit('change_doc', {
+              title: this.doc.title,
+              content: this.doc.content,
+              watermark: this.doc.watermark
+            })
+          }
+      },
+      created() {
+        this.$io.on("check_doc", (data)=>{
+          console.log(data);
+        })
+      }
+          }
+
 </script>
 
 <style scoped>
