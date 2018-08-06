@@ -26,6 +26,7 @@ router.post('/', function(req, res, next) {
       req.session.userid = results[0].userid;
       req.session.username = results[0].name;
       req.session.superuser = results[0].superuser;
+      req.session.belong = results[0].belong;
       var sesuser = {
           id: req.session.num_id,
           userid: req.session.userid,

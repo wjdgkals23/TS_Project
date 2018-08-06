@@ -2,7 +2,7 @@
   <v-layout row wrap>
     <v-flex xs6 class="text-xs-center">
       <div id="doc">
-        <img src="../assets/sejongmark.png" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
+        <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
         <div class="top-centered">
           <v-text-field label="상장명" v-model="doc.title"></v-text-field>
         </div>
@@ -37,7 +37,7 @@
           <v-subheader v-text="'Choose Watermark'"></v-subheader>
         </v-flex>
         <v-flex xs12 sm6>
-          <v-select :items="wm_list" v-model="user" label="Select" multiple max-height="400" hint="WaterMark" persistent-hint></v-select>
+          <v-select :items="wm_list" v-model="doc.watermark" label="Select" max-height="400" hint="WaterMark" persistent-hint></v-select>
         </v-flex>
       </v-layout>
     </v-flex>
@@ -59,15 +59,17 @@
       props: [ "doc" ],
       data() {
           return {
+            user: [],
             title: "",
             content: "",
             date: "",
             type: "",
             watermark: "",
-            user: [],
+            selected_grade: [],
             grade: [ "대상", "금상", "은상", "동상", "장려상" ],
             choose_grade: [],
-            wm_list: [ 'SejongMark1', 'SejongMark2' ]
+            wm_list: [ 'sejongmark.png', 'sejongmark1.png' ],
+            sql: ""
           }
       },
       computed: _.extend({
@@ -92,6 +94,7 @@
       methods: {
           change_doc: function() {
             this.$io.emit('change_doc', {
+              id: this.doc.id,
               title: this.doc.title,
               content: this.doc.content,
               watermark: this.doc.watermark
@@ -99,7 +102,7 @@
           }
       },
       created() {
-        this.$io.on("check_doc", (data)=>{
+        this.$io.on("change_doc", (data)=>{
           console.log(data);
         })
       }

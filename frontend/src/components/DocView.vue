@@ -18,7 +18,7 @@
       <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
       <div class="bottom-centered">{{ datestring }}</div>
     </div>
-    <v-btn color="green darken-1" v-on:click="save_pdf()" class="">저장</v-btn>
+    <v-btn color="green darken-1" v-on:click.stop="save_pdf()" class="">저장</v-btn>
   </div>
 </template>
 
@@ -31,23 +31,17 @@
     name: "DocModify",
     props: [ "doc" ],
     created() {
-      // console.log(this.doc);
       this.$io.on("check_doc", (data)=>{
-        console.log(data == "gogo");
         const doc = new jspdf();
-        if(data == "gogo"){
-          html2canvas(document.querySelector("#doc")).then(canvas =>{
+        if(data.message == "gogo"){
+          html2canvas(document.querySelector("#doc2")).then(canvas =>{
             var image = canvas.toDataURL("image/png");
-            doc.addImage(image, 'JPEG', 0,0, 210, 297)
-            doc.save("simple_test.pdf")
+            doc.addImage(image, 'JPEG', 0,0, 210, 297);
+            doc.save(this.doc.title + " " + this.doc.name);
           });
         }
         else{
-          html2canvas(document.querySelector("#doc2")).then(canvas =>{
-            var image = canvas.toDataURL("image/png");
-            doc.addImage(image, 'JPEG', 0,0, 210, 297)
-            doc.save(this.doc.title + " " + this.doc.name);
-          });
+          console.log("test");
         }
       })
     },
