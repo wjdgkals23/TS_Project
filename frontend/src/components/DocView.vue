@@ -37,11 +37,16 @@
           html2canvas(document.querySelector("#doc2")).then(canvas =>{
             var image = canvas.toDataURL("image/png");
             doc.addImage(image, 'JPEG', 0,0, 210, 297);
-            doc.save(this.doc.title + " " + this.doc.name);
+            doc.save(this.doc.title + " " + this.doc.name + ".pdf");
           });
         }
-        else{
-          console.log("test");
+        if(data.message == "change_content"){
+          this.doc = data.doc[0];
+          html2canvas(document.querySelector("#doc2")).then(canvas =>{
+            var image = canvas.toDataURL("image/png");
+            doc.addImage(image, 'JPEG', 0,0, 210, 297);
+            doc.save(this.doc.title + " " + this.doc.name + ".pdf");
+          });
         }
       })
     },

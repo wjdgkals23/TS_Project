@@ -43,7 +43,7 @@
     </v-flex>
     <v-flex xs12 class="text-xs-center" style="margin-top: 20px">
       <div>
-        <v-btn color="green darken-1" v-on:click="change_doc">저장</v-btn>
+        <v-btn color="green darken-1" v-on:click.stop="change_doc" v-bind:to="{ name: mode }">저장</v-btn>
         <v-btn color="green darken-1" v-bind:to="{ name: mode }">취소</v-btn>
       </div>
     </v-flex>
@@ -97,13 +97,19 @@
               id: this.doc.id,
               title: this.doc.title,
               content: this.doc.content,
-              watermark: this.doc.watermark
+              watermark: this.doc.watermark,
+              belong: this.belong[0].id
             })
           }
       },
       created() {
         this.$io.on("change_doc", (data)=>{
-          console.log(data);
+          if(data.message === "doc_state_success"){
+            console.log(data.doc);
+          }
+          else{
+            console.log(data.message);
+          }
         })
       }
           }

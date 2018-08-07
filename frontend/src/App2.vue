@@ -7,8 +7,8 @@
             <v-toolbar-title>Crape Management</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn flat v-on:click="loginclick" v-if="!login_maintain">Login</v-btn>
-              <v-btn flat v-on:click="logout" v-if="login_maintain" v-bind:to="{ name:'Empty' }">Logout</v-btn>
+              <v-btn flat v-on:click.stop="loginclick" v-if="!login_maintain">Login</v-btn>
+              <v-btn flat v-on:click.stop="logout" v-if="login_maintain" v-bind:to="{ name:'Empty' }">Logout</v-btn>
             </v-toolbar-items>
           </v-toolbar>
         </v-flex>
@@ -30,8 +30,8 @@
           </v-flex>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat="flat" @click="login">Login</v-btn>
-            <v-btn color="green darken-1" flat="flat" @click="cancel">Cancel</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click.stop="login">Login</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click.stop="cancel">Cancel</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

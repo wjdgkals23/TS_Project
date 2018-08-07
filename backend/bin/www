@@ -130,17 +130,16 @@ io.sockets.on('connection',(socket)=>{
     socket.on("check_doc", (data)=>{
         // console.log(data);
         let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-            +"WHERE A.user_id = " + data.id + " AND B.content = '" + data.content + "' AND B.watermark = '" + data.watermark+ "') as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
+            +"WHERE A.user_id = " + data.id + " AND B.content = '" + data.content + + " AND B.title = '" + data.title + "' AND B.watermark = '" + data.watermark+ "') as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
         conn.query(sql, function(err,results) {
             if(err){
                 console.log(err);
                 socket.emit("check_doc", { message: "error_check_doc" })
             }
             else{
-                console.log(results);
                 if(results.length <= 0) {
                     let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-                        +"WHERE A.user_id = " + data.id + " AND A.id = " + data.doc_num + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);" + "SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
+                        +"WHERE A.user_id = " + data.id + " AND A.id = " + data.doc_num + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);";
                     conn.query(sql, function(err,results1){
                       if(err){
                           console.log(err);
@@ -162,10 +161,20 @@ io.sockets.on('connection',(socket)=>{
         conn.query(sql, function(err, results){
             if(err){
                 console.log(err);
+                socket.emit("change_doc", { message : "change failed" });
             }
             else{
-                // let sql = "SELECT * FROM ts.doctype WHERE company = " + data.belong + ";"
-                socket.emit("change_doc", "change complete");
+                console.log(results);
+                let sql2 = "SELECT * FROM ts.doctype WHERE company = " + data.belong + ";"
+                conn.query(sql2, (err,results2) => {
+                    if(err){
+                        console.log(err);
+                        socket.emit("change_doc", { message : "doc_state_failed" });
+                    }
+                    else{
+                        socket.emit("change_doc", { message : "doc_state_success", doc: results2 });
+                    }
+                })
             }
         })
     });
