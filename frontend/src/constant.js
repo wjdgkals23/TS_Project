@@ -3,5 +3,6 @@ export default {
   LOGOUT : "logout",
   LOOGIN_CLICK : "loginClick",
   CANCEL : "cancel",
-  ADD_DOC: "adddoc"
+  ADD_DOC: "adddoc",
+  SELECTDOC: "selectdoc"
 }

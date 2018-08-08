@@ -11,7 +11,7 @@
           <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
           <v-btn v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" v-on:click.stop="doc_check = false">수정</v-btn>
           <v-btn v-bind:to="{ name:'DocView' , params: { doc: item, no: index+1 }}" v-on:click.stop="doc_check = false">보기</v-btn>
-          <v-btn v-bind:to="{ name:'DocDistribute' , params: { doc: item, no: index+1 }}" v-on:click.stop="doc_check = false">배포</v-btn>
+          <v-btn v-bind:to="{ name:'DocDistribute' , params: { doc: item, no: index+1 }}" v-on:click.stop="doc_check = false; change_doc(item);">배포/삭제</v-btn>
           <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
         </v-card>
       </v-layout>
@@ -26,6 +26,7 @@
 <script>
   import router from '../router/index'
   import _ from 'lodash'
+  import Constant from '../constant'
   import { mapState, mapMutations } from 'vuex'
 
     export default {
@@ -40,7 +41,7 @@
             return true
           }
         }
-      },mapState([ 'doc_list', 'user_data', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw' ])) ,
+      },mapState([ 'doc_list', 'user_data', 'mode', 'doc', 'login_check', 'greet_check', 'id', 'pw', 'distribute_doc' ])) ,
       data() {
           return {
             null_ch: true,
@@ -49,11 +50,9 @@
       },
 
       methods: {
-          // Modifydoc: function(item){
-          //   item.mode = "modify";
-          //   console.log(item);
-          //   this.$emit("modifydoc", item);
-          // }
+          change_doc: function(item) {
+            this.$store.dispatch(Constant.SELECTDOC, item);
+          }
       }
     }
 </script>

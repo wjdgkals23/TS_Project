@@ -9,6 +9,7 @@ export default {
         state.mode = payload.name;
         state.user_data = payload.userdata;
         state.belong = payload.belong;
+        state.distribute_doc = payload.distribute_doc;
       }
       else{
         state.doc_list = payload.doc_list;
@@ -40,5 +41,9 @@ export default {
     else {
       console.log("empty");
     }
+  },
+
+  [Constant.SELECTDOC] : (state, payload) => {
+    state.selected_doc = payload;
   }
 }

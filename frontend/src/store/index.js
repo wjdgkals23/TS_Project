@@ -12,6 +12,17 @@ const store = new Vuex.Store({
   state,
   mutations,
   actions,
+  getters: {
+    doctype_doc(state) {
+      let temp = [];
+      for(let i in state.distribute_doc){
+        if(state.distribute_doc[i].doctype_num == state.selected_doc.id){
+          temp.push(state.distribute_doc[i]);
+        }
+      }
+      return temp;
+    }
+  },
   plugins: [createPersistedState({
     key: "pcb080bdk",
     storage: {

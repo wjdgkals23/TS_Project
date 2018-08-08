@@ -59,7 +59,8 @@ io.sockets.on('connection',(socket)=>{
         }
         else {
             var sql = "SELECT * FROM ts.doctype WHERE company = " + data.belong + ";" +
-                "SELECT * FROM ts.user WHERE superuser = 0 and belong = " + data.belong + "; SELECT * FROM ts.belong WHERE id = " + data.belong + ";"
+                "SELECT * FROM ts.user WHERE superuser = 0 and belong = " + data.belong + "; SELECT * FROM ts.belong WHERE id = " + data.belong + ";" +
+                "SELECT C.*, D.name, D.age FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.id as doctype_num, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)) as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
             conn.query(sql, function(err, results){
                 if(err){
                     console.log("login_error");
@@ -71,7 +72,8 @@ io.sockets.on('connection',(socket)=>{
                         doc: results[0],
                         userid: data.userid,
                         userdata: results[1],
-                        belong: results[2]
+                        belong: results[2],
+                        distribute_doc: results[3]
                     }
                     socket.emit("login", result);
                 }

@@ -78,11 +78,13 @@
           temp.belong = data.belong;
         }
         else{
+          console.log(data);
             temp.name = data.name;
             temp.doc_list = data.doc;
             temp.id = data.userid;
             temp.userdata = data.userdata;
             temp.belong = data.belong;
+            temp.distribute_doc = data.distribute_doc;
         }
         this.$store.dispatch(Constant.LOGIN, temp);
         this.userid = "";

@@ -18,7 +18,7 @@
     <v-flex xs6 class="text-xs-right">
       <v-layout row wrap align-center>
         <v-flex xs12 sm6>
-          <v-subheader v-text="'Choose Multiple Student'"></v-subheader>
+          <v-subheader v-text="'배포할 대상을 선택하세요.'"></v-subheader>
         </v-flex>
         <v-flex xs12 sm6 class="text-xs-right">
           <v-select :items="user_data_computed" v-model="user" label="Select" multiple max-height="400" hint="Pick Student" persistent-hint></v-select>
@@ -30,6 +30,15 @@
         </v-flex>
         <v-flex xs12 sm6>
           <v-select :items="grade" v-model="choose_grade" label="Select" max-height="400" hint="Pick Grade" persistent-hint></v-select>
+        </v-flex>
+      </v-layout>
+
+      <v-layout row wrap align-center>
+        <v-flex xs12 sm6>
+          <v-subheader v-text="'Choose Crape Grade'"></v-subheader>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-select :items="d_doc_computed" label="Select" max-height="400" hint="Pick Grade" persistent-hint multiple></v-select>
         </v-flex>
       </v-layout>
     </v-flex>
@@ -45,10 +54,10 @@
 
 <script>
   import _ from 'lodash'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   export default {
     name: "DocDistribute",
-    props: [ "doc" ],
+    props: [ "doc", "distribute_list" ],
     created() {
       this.$io.on("distributedoc", (res)=>{
         console.log("hi");
@@ -78,7 +87,8 @@
         choose_grade: "",
         wm_list: [ 'SejongMark1', 'SejongMark2' ],
         insert_sql: "",
-        select_sql: ""
+        select_sql: "",
+        d_doc: []
       }
     },
     methods: {
@@ -110,8 +120,16 @@
           temp.push(info.id + " " + info.name);
         }
         return temp;
+      },
+      d_doc_computed: function() {
+        let temp = [];
+        for(let i in this.doctype_doc){
+          temp.push(this.doctype_doc[i].name + this.doctype_doc[i].user_id);
+        }
+        return temp;
       }
-    }, mapState([ 'mode', 'user_data', 'belong' ]))
+    }, mapState([ 'mode', 'user_data', 'belong', 'selected_doc', 'distribute_doc' ])
+      , mapGetters([ 'doctype_doc' ]))
   }
 </script>
 

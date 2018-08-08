@@ -3,10 +3,11 @@ export default {
   user_data: [],
   check: false,
   mode: "",
-  doc: "",
+  selected_doc: "",
   login_check: true,
   greet_check: true,
   id: "",
   pw: "",
-  belong: ""
+  belong: "",
+  distribute_doc: []
 }
