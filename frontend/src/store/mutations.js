@@ -42,8 +42,10 @@ export default {
       console.log("empty");
     }
   },
-
   [Constant.SELECTDOC] : (state, payload) => {
     state.selected_doc = payload;
+  },
+  [Constant.UPDATE_DISTRIBUTE] : (state, payload) => {
+    state.distribute_doc = payload;
   }
 }

@@ -10,8 +10,13 @@ export default {
     store.commit(Constant.ADD_DOC, payload);
   },
   [Constant.SELECTDOC] : (store, payload) => {
-    console.log("### SELECTDOCDOC");
+    console.log("### SELECTDOC");
     console.log(payload);
     store.commit(Constant.SELECTDOC, payload);
+  },
+  [Constant.UPDATE_DISTRIBUTE] : (store, payload) => {
+    console.log("### UPDATE DISTRIBUTE DOC");
+    console.log(payload);
+    store.commit(Constant.UPDATE_DISTRIBUTE, payload);
   }
 }

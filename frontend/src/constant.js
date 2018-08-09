@@ -4,5 +4,6 @@ export default {
   LOOGIN_CLICK : "loginClick",
   CANCEL : "cancel",
   ADD_DOC: "adddoc",
-  SELECTDOC: "selectdoc"
+  SELECTDOC: "selectdoc",
+  UPDATE_DISTRIBUTE: "updatedistribute"
 }
