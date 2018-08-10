@@ -26,7 +26,7 @@
 
   export default {
     router,
-    name: "SuperUser",
+    name: "User",
     computed : _.extend({
       login_maintain: function() {
         if(this.mode == ""){

@@ -148,31 +148,43 @@ io.sockets.on('connection',(socket)=>{
     });
     socket.on("check_doc", (data)=>{
         // console.log(data);
-        let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-            +"WHERE A.user_id = " + data.id + " AND B.content = '" + data.content + + " AND B.title = '" + data.title + "' AND B.watermark = '" + data.watermark+ "') as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
-        conn.query(sql, function(err,results) {
-            if(err){
-                console.log(err);
-                socket.emit("check_doc", { message: "error_check_doc" })
-            }
-            else{
-                if(results.length <= 0) {
-                    let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
-                        +"WHERE A.user_id = " + data.id + " AND A.id = " + data.doc_num + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);";
-                    conn.query(sql, function(err,results1){
-                      if(err){
-                          console.log(err);
-                      }
-                      else{
-                          socket.emit("check_doc", { message: "change_content", doc: results1 });
-                      }
-                    })
+            let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+                +"WHERE A.user_id = " + data.id + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);";
+            conn.query(sql, function(err,results1){
+                if(err){
+                    console.log(err);
                 }
-                else {
-                    socket.emit("check_doc", { message: "gogo" })
+                else{
+                    console.log(results1);
+                    socket.emit("check_doc", results1 );
                 }
-            }
-        })
+            })
+        // let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+        //     +"WHERE A.user_id = " + data.id + " AND B.content = '" + data.content + + " AND B.title = '" + data.title + "' AND B.watermark = '" + data.watermark+ "') as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
+        // conn.query(sql, function(err,results) {
+        //     if(err){
+        //         console.log(err);
+        //         socket.emit("check_doc", { message: "error_check_doc" })
+        //     }
+        //     else{
+        //         if(results.length <= 0) {
+        //             let sql = "SELECT C.*, D.* FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)"
+        //                 +"WHERE A.user_id = " + data.id + ") as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);";
+        //             conn.query(sql, function(err,results1){
+        //               if(err){
+        //                   console.log(err);
+        //               }
+        //               else{
+        //                   console.log(results1);
+        //                   // socket.emit("check_doc", { message: "change_content", doc: results1 });
+        //               }
+        //             })
+        //         }
+        //         else {
+        //             socket.emit("check_doc", { message: "gogo" })
+        //         }
+        //     }
+        // })
     });
     socket.on("change_doc", (data)=>{
         let sql = "Update ts.doctype SET content = '" + data.content + "', title = '" + data.title + "'"
