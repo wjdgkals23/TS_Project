@@ -18,7 +18,7 @@
       <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
       <div class="bottom-centered">{{ datestring }}</div>
     </div>
-    <v-btn color="green darken-1" v-on:click.stop="save_pdf()" class="" v-if="save_if">저장</v-btn>
+    <v-btn color="green darken-1" v-on:click.stop="save_pdf()" class="" v-if="save_if" v-bind:to="{ name: mode }">저장</v-btn>
     <v-btn color="green darken-1" v-on:click.stop="check_doc()" class="">확인</v-btn>
   </div>
 </template>
@@ -30,37 +30,37 @@
   import jspdf from 'jspdf'
   import html2canvas from 'html2canvas'
   export default {
-    name: "DocModify",
+    name: "DocView",
     props: [ "doc" ],
     created() {
-      this.$io.on("check_doc", (data)=>{
-        let bool_doc = false;
-        let index;
-        console.log(data);
-        for(let i in data){
-          console.log(data[i].doc_num == this.doc.doc_num);
-          if(this.doc.doc_num == data[i].doc_num){
-            bool_doc = true;
-            index = i;
-            this.$store.dispatch(Constant.ADD_DOC, data);
-            break;
-          }
-        }
-        if(bool_doc == true){ // 내꺼 삭제되지는 않았어!
-          if(data[index].title != this.doc.title || data[index].content != this.doc.content || data[index].grade != this.doc.grade ){
-            alert("내용에 변화가 있습니다. 해당 상장의 보기를 눌러주세요");
-            this.doc = data[index];
-          }
-          else if(data[index].title == this.doc.title && data[index].content == this.doc.content && data[index].grade == this.doc.grade){
-            alert("저장을 누르세요");
-            this.save_if = true;
-          }
-        }
-        else{
-          this.$store.dispatch(Constant.ADD_DOC, data);
-          alert("상장 삭제되었습니다. 상단 조회버튼을 누르세요.");
-        }
-      })
+      // this.$io.on("check_doc", (data)=>{
+      //   let bool_doc = false;
+      //   let index;
+      //   console.log(data);
+      //   for(let i in data){
+      //     console.log(data[i].doc_num == this.doc.doc_num);
+      //     if(this.doc.doc_num == data[i].doc_num){
+      //       bool_doc = true;
+      //       index = i;
+      //       this.$store.dispatch(Constant.ADD_DOC, data);
+      //       break;
+      //     }
+      //   }
+      //   if(bool_doc == true){ // 내꺼 삭제되지는 않았어!
+      //     if(data[index].title != this.doc.title || data[index].content != this.doc.content || data[index].grade != this.doc.grade ){
+      //       alert("내용에 변화가 있습니다. 해당 상장의 보기를 눌러주세요");
+      //       this.doc = data[index];
+      //     }
+      //     else if(data[index].title == this.doc.title && data[index].content == this.doc.content && data[index].grade == this.doc.grade){
+      //       alert("저장을 누르세요");
+      //       this.save_if = true;
+      //     }
+      //   }
+      //   else{
+      //     this.$store.dispatch(Constant.ADD_DOC, data);
+      //     alert("상장 삭제되었습니다. 상단 조회버튼을 누르세요.");
+      //   }
+      // })
     },
     data() {
       return {
@@ -103,6 +103,35 @@
       },
       check_doc: function() {
         this.$io.emit("check_doc", this.doc);
+        this.$http.post("/checkdoc", this.doc).then((response)=>{
+          let data = response.data;
+          let index;
+          console.log(data);
+          let bool_doc;
+          for(let i in data){
+            console.log(data[i].doc_num == this.doc.doc_num);
+            if(this.doc.doc_num == data[i].doc_num){
+              bool_doc = true;
+              index = i;
+              this.$store.dispatch(Constant.ADD_DOC, data);
+              break;
+            }
+          }
+          if(bool_doc == true){ // 내꺼 삭제되지는 않았어!
+            if(data[index].title != this.doc.title || data[index].content != this.doc.content || data[index].grade != this.doc.grade ){
+              alert("내용에 변화가 있습니다. 해당 상장의 보기를 눌러주세요");
+              this.doc = data[index];
+            }
+            else if(data[index].title == this.doc.title && data[index].content == this.doc.content && data[index].grade == this.doc.grade){
+              alert("저장을 누르세요");
+              this.save_if = true;
+            }
+          }
+          else{
+            this.$store.dispatch(Constant.ADD_DOC, data);
+            alert("상장 삭제되었습니다. 상단 조회버튼을 누르세요.");
+          }
+        })
       }
     }
   }
