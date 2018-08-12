@@ -1,14 +1,17 @@
 <template>
-  <v-app>
-    <v-container grid-list-md>
+  <v-app id="app">
+    <v-container grid-list-md style="box-shadow: #505050 2px 3px 3px 2px">
       <v-layout row wrap>
         <v-flex xs12>
           <v-toolbar color="orange darken-3">
-            <v-toolbar-title>Crape Management</v-toolbar-title>
+            <img src="/images/tomato.jpg" alt="" style="width: 60px; height: 40px;">
+            <v-toolbar-title style="color: #fff176; font-size: 25px">Crape Management</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
-              <v-btn flat v-on:click.stop="loginclick" v-if="!login_maintain">Login</v-btn>
-              <v-btn flat v-on:click.stop="logout" v-if="login_maintain" v-bind:to="{ name:'Empty' }">Logout</v-btn>
+              <v-btn flat style="color: #fff176; font-size: 18px" v-if="mode=='User'">{{ id }}</v-btn>
+              <v-btn flat style="color: #fff176; font-size: 18px" v-if="mode=='SuperUser'">관리자</v-btn>
+              <v-btn flat v-on:click.stop="loginclick" v-if="!login_maintain" style="color: #fff176; font-size: 18px">Login</v-btn>
+              <v-btn flat v-on:click.stop="logout" v-if="login_maintain" v-bind:to="{ name:'Empty' }" style="color: #fff176; font-size: 18px">Logout</v-btn>
             </v-toolbar-items>
           </v-toolbar>
         </v-flex>
@@ -135,7 +138,10 @@
 <style>
   #app {
     /*text-align: center;*/
-    /*margin: 10px auto;*/
+    font-family: "나눔고딕";
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px auto;
     box-shadow: 1px 1px 1px 1px #888888;
     position: relative;
   }

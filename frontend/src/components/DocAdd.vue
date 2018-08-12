@@ -64,7 +64,7 @@
         selected_grade: [],
         grade: [ "대상", "금상", "은상", "동상", "장려상" ],
         choose_grade: [],
-        wm_list: [ 'sejongmark.png', 'sejongmark1.png' ],
+        wm_list: [ 'sejongmark.png', 'sejongmark1.png', 'sejongmark2.png' ],
         sql: ""
       }
     },

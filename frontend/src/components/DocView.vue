@@ -1,25 +1,30 @@
 <template>
   <div>
-    <div id="doc" v-if="mode=='SuperUser'">
-      <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
-      <div class="top-centered">{{ doc.title }}</div>
-      <div class="top-left">제 {{ doc.id }} 호</div>
-      <div class="centered">{{ doc.content }}</div>
-      <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
-      <div class="bottom-centered">{{ datestring }}</div>
-    </div>
-    <div id="doc2" v-if="mode=='User'">
-      <img :src="imgsrc" alt="" class="centered" style="z-index: 1; opacity: 0.3; width: 50%;">
-      <div class="top-centered">{{ doc.title }}</div>
-      <div class="top-left">제 {{ doc.doc_num }} 호</div>
-      <div class="grade">{{ doc.grade }}</div>
-      <div class="name">성  명 : {{ doc.name }}</div>
-      <div class="centered">{{ doc.content }}</div>
-      <div class="bottom-centered-up">{{ belong[0].belongname }}</div>
-      <div class="bottom-centered">{{ datestring }}</div>
-    </div>
-    <v-btn color="green darken-1" v-on:click.stop="save_pdf()" class="" v-if="save_if" v-bind:to="{ name: mode }">저장</v-btn>
-    <v-btn color="green darken-1" v-on:click.stop="check_doc()" class="">확인</v-btn>
+    <v-flex>
+      <v-flex xs3 offset-xs9 offset-md10>
+        <v-switch :label="`세로`" v-model="isActive"></v-switch>
+      </v-flex>
+      <div v-if="mode=='SuperUser'" v-bind:class="{ doc2: isActive, doc3: !isActive}">
+        <img :src="imgsrc" alt="" class="content" style="z-index: 1; opacity: 0.3; width: 50%;">
+        <div v-bind:class="{ title: isActive, title1: !isActive}">{{ doc.title }}</div>
+        <div class="top-left">제 {{ doc.id }} 호 발행물</div>
+        <div class="content">{{ doc.content }}</div>
+        <div v-bind:class="{ belong: isActive, belong1: !isActive}">{{ belong[0].belongname }}</div>
+        <div v-bind:class="{ date: isActive, date1: !isActive}">{{ datestring }}</div>
+      </div>
+      <div v-bind:class="{ doc2: isActive, doc3: !isActive}" v-if="mode=='User'">
+        <img :src="imgsrc" alt="" class="content" style="z-index: 1; opacity: 0.3; width: 50%;">
+        <div v-bind:class="{ title: isActive, title1: !isActive}">{{ doc.title }}</div>
+        <div class="top-left">제 {{ doc.doc_num }} 호</div>
+        <div v-bind:class="{ grade: isActive, grade1: !isActive}">{{ doc.grade }}</div>
+        <div v-bind:class="{ name: isActive, name1: !isActive}">성  명 : {{ doc.name }}</div>
+        <div class="content">{{ doc.content }}</div>
+        <div v-bind:class="{ belong: isActive, belong1: !isActive}">{{ belong[0].belongname }}</div>
+        <div v-bind:class="{ date: isActive, date1: !isActive}">{{ datestring }}</div>
+      </div>
+      <v-btn color="green darken-1" v-on:click.stop="save_pdf()" class="" v-if="save_if" v-bind:to="{ name: mode }">저장</v-btn>
+      <v-btn color="green darken-1" v-on:click.stop="check_doc()" class="">확인</v-btn>
+    </v-flex>
   </div>
 </template>
 
@@ -69,7 +74,8 @@
         date: "",
         type: "",
         watermark: "",
-        save_if : false
+        save_if : false,
+        isActive : true
       }
     },
     computed: _.extend({
@@ -142,20 +148,30 @@
     box-shadow: 2px 2px 2px 2px #888888;
     margin: 10px auto;
     margin-top: 0px;
-    width: 595px;
-    height: 842px;
+    width: 398px;
+    height: 561px;
     position: relative;
-    font-size: 20px;
+    font-size: 16px;
   }
 
-  #doc2{
+  .doc2{
     box-shadow: 2px 2px 2px 2px #888888;
     margin: 10px auto;
     margin-top: 0px;
-    width: 595px;
-    height: 842px;
+    width: 398px;
+    height: 561px;
     position: relative;
-    font-size: 20px;
+    font-size: 16px;
+  }
+
+  .doc3{
+    box-shadow: 2px 2px 2px 2px #888888;
+    margin: 10px auto;
+    margin-top: 0px;
+    width: 561px;
+    height: 398px;
+    position: relative;
+    font-size: 16px;
   }
   /* Bottom left text */
   .bottom-left {
@@ -173,14 +189,28 @@
 
   .grade {
     position: absolute;
-    top: 188px;
+    top: 168px;
     right: 50px;
     font-weight: bold;
   }
 
   .name {
     position: absolute;
-    top: 228px;
+    top: 200px;
+    right: 36px;
+    font-weight: bold;
+  }
+
+  .grade1 {
+    position: absolute;
+    top: 128px;
+    right: 50px;
+    font-weight: bold;
+  }
+
+  .name1 {
+    position: absolute;
+    top: 160px;
     right: 36px;
     font-weight: bold;
   }
@@ -200,7 +230,7 @@
   }
 
   /* Centered text */
-  .centered {
+  .content {
     width: 300px;
     position: absolute;
     top: 50%;
@@ -209,7 +239,7 @@
     z-index: 2;
   }
 
-  .top-centered {
+  .title {
     position: absolute;
     top: 100px;
     left: 50%;
@@ -218,18 +248,45 @@
     font-size: 30px;
   }
 
-  .bottom-centered {
+  .title1 {
     position: absolute;
-    bottom: 100px;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    font-weight: bold;
+    font-size: 30px;
+  }
+
+  .date {
+    position: absolute;
+    bottom: 90px;
     left: 50%;
     font-weight: bold;
     font-size: 15px;
     transform: translate(-50%, 0%);
   }
 
-  .bottom-centered-up {
+  .date1 {
     position: absolute;
-    bottom: 150px;
+    bottom: 50px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 15px;
+    transform: translate(-50%, 0%);
+  }
+
+  .belong {
+    position: absolute;
+    bottom: 130px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 25px;
+    transform: translate(-50%, 0%);
+  }
+
+  .belong1 {
+    position: absolute;
+    bottom: 90px;
     left: 50%;
     font-weight: bold;
     font-size: 25px;

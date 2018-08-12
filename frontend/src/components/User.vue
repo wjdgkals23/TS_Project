@@ -1,16 +1,21 @@
 <template>
   <v-layout row wrap class="text-xs-center">
     <v-flex xs12>
-      <v-text center>상장 관리</v-text>
+      <img src="/images/sejongmark2.png" alt="" style='width: 40px; padding-top: 10px'>
+    </v-flex>
+    <v-flex xs12>
+      <v-text center style="font-size: 30px">상장 관리</v-text>
     </v-flex>
     <v-flex xs6>
-      <v-layout column wrap v-for="item, index in doc_list">
-        <v-card>
-          <v-card-text>{{index + 1}} {{item.title}}</v-card-text>
-          <v-btn v-bind:to="{ name:'UserDocView' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">보기</v-btn>
-          <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
-        </v-card>
-      </v-layout>
+      <v-container id="scroll-target" style="max-height: 600px" class="scroll-y">
+        <v-layout column wrap v-for="item, index in doc_list">
+          <v-card>
+            <v-card-text>{{index + 1}}. {{item.title}}</v-card-text>
+            <v-btn v-bind:to="{ name:'UserDocView' , params: { doc: item, no: index+1 }}" v-on:click="doc_check = false">보기</v-btn>
+            <!--<router-link v-bind:to="{ name:'DocModify' , params: { doc: item, no: index+1 }}" class="btn">보기</router-link>-->
+          </v-card>
+        </v-layout>
+      </v-container>
     </v-flex>
     <v-flex xs6>
       <div id="doc" v-if="doc_check"> VIEW </div>
