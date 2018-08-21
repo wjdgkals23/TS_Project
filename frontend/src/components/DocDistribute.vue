@@ -86,7 +86,7 @@
         else {
           alert("중복체크에 실패하였습니다.");
         }
-      })
+      });
       this.$io.on("delete_doc", (res)=>{
         console.log(res);
         this.$store.dispatch(Constant.UPDATE_DISTRIBUTE, res);

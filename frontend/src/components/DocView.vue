@@ -108,7 +108,7 @@
         });
       },
       check_doc: function() {
-        this.$io.emit("check_doc", this.doc);
+        // this.$io.emit("check_doc", this.doc);
         this.$http.post("/checkdoc", this.doc).then((response)=>{
           let data = response.data;
           let index;

@@ -128,7 +128,7 @@ io.sockets.on('connection',(socket)=>{
                             }
                             else {
                                 // console.log(results1);
-                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[1] });
+                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[1], insert:data.insert });
                             }
                         });
                     }
@@ -161,7 +161,7 @@ io.sockets.on('connection',(socket)=>{
                             }
                             else {
                                 // console.log(results1);
-                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[results1.length-1] });
+                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[results1.length-1], insert:data.insert });
                             }
                         });
                     }

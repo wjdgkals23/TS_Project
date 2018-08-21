@@ -33,8 +33,24 @@
     router,
     name: "User",
     created(){
-      this.$io.on('distributedoc', (data)=>{
-        console.log(data);
+      this.$io.on("distributedoc", (res)=>{
+        console.log("hi");
+        var count;
+        if(res.message=="complete_distribute"){
+          count = 0;
+          var spl = res.insert.split(",");
+          for(var i in spl){
+            console.log(this.doc_list[0].user_id);
+            if(i%4==0){
+              if(spl[i].indexOf(this.doc_list[0].user_id) > -1){
+                count++;
+              }
+            }
+          }
+          if(count >= 1){
+            alert("상장이 배포되었습니다"+count);
+          }
+        }
       });
     },
     computed : _.extend({
