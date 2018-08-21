@@ -1,6 +1,34 @@
-# TS_Project
-# 라우트 주의 할 점
-# 화면이 렌더링되고 주소 요청하면 그때서야 반응하는 것
-# nodejs 에서는 오로지 데이터만 전송
-# front-end에서 주소관리 어떻게 할지 생각해야할듯
-# vue-route 설정 마무리 해야할듯
+# Tomato System Summer InternShip By Sejong University
+
+## Project Name : Crape Management Platform
+
+## Tool : WebStorm
+
+## language : Vue.js Nodejs Socket.io
+
+## 프로젝트 실행 조건
+backend 디렉토리에 config 디렉토리를 생성하고 db.js 와 session.js를 생성한다.
+db.js :
+```
+module.exports = {
+    host: "localhost",
+    port: "3306",
+    user: 'root',
+    password: 'your_password',
+    database: 'your_schema',
+    multipleStatements: true
+};```
+
+session.js :
+```
+module.exports = {
+    host: "localhost",
+    port: "3306",
+    user: 'root',
+    password: 'your_password',
+    database: 'your_schema',
+};```
+
+
+## 프로젝트 설명: 링크를 참조해주시길 바랍니다.
+[상세설계서](https://drive.google.com/file/d/1obZt3bh0eePaTd50aWkTj2NEREBQZLPj/view?usp=sharing)
