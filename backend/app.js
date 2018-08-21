@@ -3,12 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var sessionData = require('./config/session')(session);
+
+var session = require('express-session');
+var sessionData = require('./config/session');
+var MySQLStore = require('express-mysql-session')(session);
+
 
 var app = express();
 
@@ -21,7 +24,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session(sessionData));
+app.use(session({
+    secret: '43521432SAF%$@!134FGD',
+    resave: false,
+    saveUninitialized: true,
+    store: new MySQLStore(sessionData)
+}));
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/', indexRouter);

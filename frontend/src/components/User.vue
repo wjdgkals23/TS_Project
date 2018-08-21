@@ -32,6 +32,11 @@
   export default {
     router,
     name: "User",
+    created(){
+      this.$io.on('distributedoc', (data)=>{
+        console.log(data);
+      });
+    },
     computed : _.extend({
       login_maintain: function() {
         if(this.mode == ""){

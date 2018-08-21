@@ -7,7 +7,9 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
-var conn = require('../config/db')();
+var mysql = require('mysql');
+var db = require("../config/db");
+var conn = mysql.createConnection(db);
 
 /**
  * Get port from environment and store in Express.
@@ -104,16 +106,17 @@ io.sockets.on('connection',(socket)=>{
         })
     });
     socket.on("distributedoc", (data)=>{
-        conn.query(data.select, function(err, results){
-            if(err){
-                console.log("check_duplicate_error");
-                console.log(err);
-                socket.emit("distributedoc", { message: "check_duplicate_error" });
-            }
-            else{
-                if(results.length > 0){
-                    if(results[0].length >0){
-                        console.log("hello", results);
+        let dis_count = data.select.split(';').length;
+        if(dis_count < 3){
+            console.log("solo");
+            conn.query(data.select, function(err, results){
+                if(err){
+                    console.log("check_duplicate_error");
+                    console.log(err);
+                    socket.emit("distributedoc", { message: "check_duplicate_error" });
+                }
+                else{
+                    if(results.length > 0){
                         socket.emit("distributedoc", { message: "duplicate"} );
                     }
                     else{
@@ -124,27 +127,47 @@ io.sockets.on('connection',(socket)=>{
                                 socket.emit("distributedoc", { message: "distribute_error" });
                             }
                             else {
-                                console.log(results1);
-                                socket.emit("distributedoc", { message: "complete_distribute", doc:results1[results1.length-1] });
+                                // console.log(results1);
+                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[1] });
                             }
                         });
                     }
                 }
-                else{
-                    let sql = data.insert + "SELECT C.*, D.name, D.age FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.id as doctype_num, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)) as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
-                    conn.query(sql, function(err, results1) {
-                       if(err){
-                           console.log(err);
-                           socket.emit("distributedoc", { message: "distribute_error" });
-                       }
-                       else {
-                           console.log(results1);
-                           socket.emit("distributedoc", { message: "complete_distribute", doc:results1[1] });
-                       }
-                    });
+            });
+        }
+        else{
+            console.log("not solo");
+            conn.query(data.select, function(err, results){
+                if(err){
+                    console.log(err);
+                    socket.emit("distributedoc", { message: "check_duplicate_error" });
                 }
-            }
-        })
+                else{
+                    let count = 0;
+                    for(let i in results){
+                        console.log(results[i].length);
+                        count += results[i].length;
+                    }
+                    if(count >= 1){
+                        console.log("test");
+                        socket.emit("distributedoc", { message: "duplicate"} );
+                    }
+                    else {
+                        let sql = data.insert + "SELECT C.*, D.name, D.age FROM (SELECT A.id as doc_num, A.grade, A.user_id, B.id as doctype_num, B.typename, B.content, B.date, B.company, B.title, B.watermark FROM ts.doc as A LEFT OUTER JOIN (SELECT * FROM ts.doctype) as B on (A.doctype = B.id)) as C LEFT OUTER JOIN (SELECT * FROM ts.user) as D on (C.user_id = D.id);"
+                        conn.query(sql, function(err, results1) {
+                            if(err){
+                                console.log(err);
+                                socket.emit("distributedoc", { message: "distribute_error" });
+                            }
+                            else {
+                                // console.log(results1);
+                                io.emit("distributedoc", { message: "complete_distribute", doc:results1[results1.length-1] });
+                            }
+                        });
+                    }
+                }
+            });
+        }
     });
     socket.on("check_doc", (data)=>{
         // console.log(data);
@@ -203,7 +226,7 @@ io.sockets.on('connection',(socket)=>{
                         socket.emit("change_doc", { message : "doc_state_failed" });
                     }
                     else{
-                        socket.emit("change_doc", { message : "doc_state_success", doc: results2 });
+                        socket.broadcast.emit("change_doc", { message : "doc_state_success", doc: results2 });
                     }
                 })
             }
