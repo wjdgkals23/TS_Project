@@ -8,6 +8,7 @@
 
 ## 프로젝트 실행 조건
 backend 디렉토리에 config 디렉토리를 생성하고 db.js 와 session.js를 생성한다.
+
 db.js :
 ```
 module.exports = {
@@ -17,7 +18,8 @@ module.exports = {
     password: 'your_password',
     database: 'your_schema',
     multipleStatements: true
-};```
+};
+```
 
 session.js :
 ```
@@ -27,7 +29,8 @@ module.exports = {
     user: 'root',
     password: 'your_password',
     database: 'your_schema',
-};```
+};
+```
 
 
 ## 프로젝트 설명: 링크를 참조해주시길 바랍니다.
