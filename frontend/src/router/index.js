@@ -22,43 +22,43 @@ export default new Router({
       props: true
     },
     {
-      path: '/SuperUser',
+      path: '/superuser',
       name: 'SuperUser',
       component: Super,
       props: true,
       children: [{
-        path: '/SuperUser/DocView/:no',
+        path: '/superuser/doc/:no',
         name: 'DocView',
         component: DocView,
         props: true
       }]
     },
     {
-      path: '/User',
+      path: '/user',
       name: 'User',
       component: User,
       props: true,
       children: [{
-        path: '/User/DocView/:no',
+        path: '/user/doc/:no',
         name: 'UserDocView',
         component: DocView,
         props: true
       }]
     },
     {
-      path: '/SuperUser/DocModify/:no',
+      path: '/superuser/doc/:no',
       name: 'DocModify',
       component: DocModify,
       props: true
     },
     {
-      path: '/Superuser/DocAdd',
+      path: '/superuser/new',
       name: 'DocAdd',
       component: DocAdd,
       props: true
     },
     {
-      path: '/SuperUser/DocDistribute/:no',
+      path: '/superuser/doc/:no',
       name: 'DocDistribute',
       component: DocDistribute,
       props: true
