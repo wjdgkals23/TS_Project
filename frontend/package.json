@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "^2.5.94",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "html2canvas": "^1.0.0-alpha.12",
     "js-cookie": "^2.2.0",
     "jspdf": "^1.4.1",
