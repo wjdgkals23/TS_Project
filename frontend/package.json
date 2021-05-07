@@ -15,7 +15,7 @@
     "html2canvas": "^1.0.0-alpha.12",
     "js-cookie": "^2.2.0",
     "jspdf": "^1.4.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "material-design-icons-iconfont": "^3.0.3",
     "socket.io-client": "^2.1.1",
     "vue": "^2.5.2",
